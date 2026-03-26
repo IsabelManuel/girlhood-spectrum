@@ -8,19 +8,36 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <header><h1>Girlhood Spectrum</h1>
-  <p>Partilha como te sentes hoje</p>
-</header>
 
-<main>
-  <h2>Entrar</h2>
+    <header class="top-header">
+        <h1>Girlhood Spectrum</h1>
+        <p class="subtitle">Sentimentos suaves . Espaço partilhado 🌷</p>
+    </header>
 
-  <form action="mood.html">
-    <label>Nome de utilizador:</label><br>
-    <input type="text" name="user" required><br>
+        <main class="center-container">
+            <section class="login-box">
+            <p class="big text">Um cantinho da internet para os teus sentimentos</p>
+                <p class="small-text">Sem pressão . Sem julgamentos . Só tu</p>
 
-    <button type="submit">Continuar</button>
-  </form>
-</main></header>
+                <form id="loginForm">
+                    <label for="usernameInput"><strong>Teu nome:</strong></label><br>
+                    <input
+                        type="text"
+                        id="usernameInput"
+                        name="user"
+                        placeholder="ex: Luna 🌸"
+                        required>
+                        <br>
+                    <button id="submitBtn" type="submit">Continuar →</button>
+                </form><br>
 
+                <p class="hint">Apenas o teu nome, nada mais é necessário</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2026 Girlhood Spectrum</p>
+        </footer>
+                    
+</body>
 </html>
