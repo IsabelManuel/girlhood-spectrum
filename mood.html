@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escolher Mood</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
 </head>
 <body>
@@ -47,8 +47,27 @@
         <span>😡 Zangado</span>
       </label>
 
+      <div class="intensity-section">
+        <label for="intensitySlider"><strong>Intensidade do sentimento:</strong></label>
+        <div class="slider-container">
+          <input 
+            type="range" 
+            id="intensitySlider" 
+            name="intensity" 
+            min="1" 
+            max="10" 
+            value="5"
+            class="intensity-slider">
+          <div class="intensity-labels">
+            <span>Fraco</span>
+            <span id="intensityValue">5</span>
+            <span>Intenso</span>
+          </div>
+        </div>
+      </div>
+
       <button id="saveMoodBtn" type="submit" onclick="window.location.href='finalmood.html'">Guardar</button><br>
-      <button id="viewMoodsBtn" type="button" onclick="window.location.href='finalmood.html'">Ver moods</button>
+      <button id="viewMoodsBtn" type="button" onclick="window.location.href='history.html'">Ver meu histórico</button>
     </form>
   </section>
 </main>

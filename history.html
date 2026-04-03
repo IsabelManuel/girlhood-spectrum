@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Histórico</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+
+<header class="top-header">
+  <h1>Meu Histórico 📊</h1><br>
+  <p class="subtitle">acompanha os teus sentimentos ao longo do tempo</p>
+</header>
+
+<main class="center-container">
+
+  <section class="login-box">
+
+    <!-- STATISTICS SECTION -->
+    <div class="stats-container">
+      <h2>As tuas Estatísticas</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total de Moods</div>
+          <div class="stat-value" id="totalMoods">0</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-label">Mood Mais Frequente</div>
+          <div class="stat-value" id="topMood">-</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-label">Intensidade Média</div>
+          <div class="stat-value" id="avgIntensity">-</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PERSONAL HISTORY SECTION -->
+    <div class="history-container">
+      <h2>Teu Histórico</h2>
+      
+      <div class="history-list" id="historyList">
+        <!-- MOODS LOADED BY JAVASCRIPT -->
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- NAVIGATION BUTTONS -->
+    <div class="button-group">
+      <button type="button" onclick="window.location.href='mood.html'" class="nav-btn">➕ Novo Mood</button>
+      <button type="button" onclick="window.location.href='finalmood.html'" class="nav-btn">👥 Moods da Comunidade</button>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+   <p>© 2026 Girlhood Spectrum</p>
+</footer>
+
+</body>
+</html>
