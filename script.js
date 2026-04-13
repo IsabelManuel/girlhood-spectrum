@@ -169,3 +169,337 @@ if (moodsList) {
     });
   }
 }
+
+// ========== GAMIFICATION SYSTEM ==========
+
+// DEFAULT WELLNESS CHALLENGES
+const defaultChallenges = [
+  { id: 1, title: "💧 Bebe 2 Litros de Água", description: "Mantém-te hidratada durante o dia", points: 20, icon: "💧" },
+  { id: 2, title: "🧘 Meditação de 10 Minutos", description: "Dedica 10 minutos à meditação", points: 25, icon: "🧘" },
+  { id: 3, title: "🚶 Caminhada de 30 Minutos", description: "Sai à rua e aproveita o ar fresco", points: 30, icon: "🚶" },
+  { id: 4, title: "📖 Lê uma Página", description: "Relaxa e mergulha num livro", points: 15, icon: "📖" },
+  { id: 5, title: "😴 Dorme Bem", description: "Vai dormir antes das 23h", points: 35, icon: "😴" },
+  { id: 6, title: "🎨 Criatividade", description: "Desenha, pinta ou cria algo", points: 20, icon: "🎨" },
+  { id: 7, title: "🤝 Contacta uma Amiga", description: "Manda uma mensagem de apoio", points: 25, icon: "🤝" },
+  { id: 8, title: "🍎 Come Saudável", description: "Consome uma refeição nutritiva", points: 15, icon: "🍎" }
+];
+
+// === FRIENDS MANAGEMENT (friends.html) ===
+
+const addFriendForm = document.getElementById("addFriendForm");
+const friendsList = document.getElementById("friendsList");
+
+if (addFriendForm) {
+  addFriendForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const friendName = document.getElementById("friendNameInput").value.trim();
+    const username = localStorage.getItem("username");
+    
+    if (!friendName) return;
+    
+    // Criar objeto da amiga
+    let userFriends = JSON.parse(localStorage.getItem("userFriends")) || [];
+    
+    // Verificar se amiga já existe
+    if (userFriends.find(f => f.name.toLowerCase() === friendName.toLowerCase())) {
+      alert("Esta amiga já está na tua lista! 💕");
+      return;
+    }
+    
+    userFriends.push({
+      name: friendName,
+      addedDate: new Date().toLocaleString('pt-PT'),
+      points: 0,
+      reactions: 0,
+      comments: 0,
+      completedChallenges: 0
+    });
+    
+    localStorage.setItem("userFriends", JSON.stringify(userFriends));
+    document.getElementById("friendNameInput").value = "";
+    
+    loadFriendsView();
+  });
+}
+
+function loadFriendsView() {
+  if (!friendsList) return;
+  
+  let userFriends = JSON.parse(localStorage.getItem("userFriends")) || [];
+  
+  friendsList.innerHTML = "";
+  
+  if (userFriends.length === 0) {
+    friendsList.innerHTML = "<p class='empty-message'>Ainda não adicionaste nenhuma amiga. Vamos começar! 👯</p>";
+  } else {
+    userFriends.forEach((friend, index) => {
+      const friendCard = document.createElement("div");
+      friendCard.classList.add("friend-card");
+      
+      const supportBadge = friend.reactions > 5 ? "🌟 Muito Apoiadora" : friend.reactions > 0 ? "💪 Apoiadora" : "👋 Recente";
+      
+      friendCard.innerHTML = `
+        <div class="friend-header">
+          <div class="friend-name">${friend.name}</div>
+          <button class="remove-btn" onclick="removeFriend(${index})">✕</button>
+        </div>
+        <div class="friend-stats">
+          <div class="stat">
+            <span class="stat-label">Pontos</span>
+            <span class="stat-value">${friend.points}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Reações</span>
+            <span class="stat-value">${friend.reactions}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Comentários</span>
+            <span class="stat-value">${friend.comments}</span>
+          </div>
+        </div>
+        <div class="friend-badge">${supportBadge}</div>
+        <div class="friend-actions">
+          <button class="action-btn" onclick="addReaction(${index})">👍 Reagir</button>
+          <button class="action-btn" onclick="addComment(${index})">💬 Comentar</button>
+        </div>
+      `;
+      
+      friendsList.appendChild(friendCard);
+    });
+  }
+}
+
+function removeFriend(index) {
+  let userFriends = JSON.parse(localStorage.getItem("userFriends")) || [];
+  const friendName = userFriends[index].name;
+  
+  if (confirm(`Tens a certeza que queres remover ${friendName}? 💔`)) {
+    userFriends.splice(index, 1);
+    localStorage.setItem("userFriends", JSON.stringify(userFriends));
+    loadFriendsView();
+  }
+}
+
+function addReaction(index) {
+  let userFriends = JSON.parse(localStorage.getItem("userFriends")) || [];
+  userFriends[index].reactions += 1;
+  userFriends[index].points += 5;
+  
+  localStorage.setItem("userFriends", JSON.stringify(userFriends));
+  loadFriendsView();
+}
+
+function addComment(index) {
+  let userFriends = JSON.parse(localStorage.getItem("userFriends")) || [];
+  userFriends[index].comments += 1;
+  userFriends[index].points += 10;
+  
+  localStorage.setItem("userFriends", JSON.stringify(userFriends));
+  loadFriendsView();
+}
+
+// Load friends on friends page
+if (friendsList) {
+  loadFriendsView();
+}
+
+// === WELLNESS CHALLENGES (wellness-challenges.html) ===
+
+const challengesList = document.getElementById("challengesList");
+const completedList = document.getElementById("completedList");
+
+function loadChallengesView() {
+  if (!challengesList) return;
+  
+  let userChallenges = JSON.parse(localStorage.getItem("userChallenges")) || [];
+  let userPoints = JSON.parse(localStorage.getItem("userPoints")) || 0;
+  
+  // Inicializar desafios padrão se não existem
+  if (userChallenges.length === 0) {
+    userChallenges = defaultChallenges.map(c => ({
+      ...c,
+      completed: false,
+      completedDate: null
+    }));
+    localStorage.setItem("userChallenges", JSON.stringify(userChallenges));
+  }
+  
+  // Separar desafios ativos e completados
+  const activeChallenges = userChallenges.filter(c => !c.completed);
+  const completed = userChallenges.filter(c => c.completed);
+  
+  // Exibir desafios ativos
+  challengesList.innerHTML = "";
+  if (activeChallenges.length === 0) {
+    challengesList.innerHTML = "<p class='empty-message'>Todos os desafios completados! Parabéns! 🎉</p>";
+  } else {
+    activeChallenges.forEach((challenge, index) => {
+      const card = document.createElement("div");
+      card.classList.add("challenge-card");
+      
+      card.innerHTML = `
+        <div class="challenge-header">
+          <span class="challenge-icon">${challenge.icon}</span>
+          <div class="challenge-info">
+            <strong>${challenge.title}</strong>
+            <p>${challenge.description}</p>
+          </div>
+          <span class="challenge-points">+${challenge.points}pts</span>
+        </div>
+        <button class="challenge-complete-btn" onclick="completeChallenge(${challenge.id})">✔️ Completo!</button>
+      `;
+      
+      challengesList.appendChild(card);
+    });
+  }
+  
+  // Exibir desafios completados
+  completedList.innerHTML = "";
+  if (completed.length === 0) {
+    completedList.innerHTML = "<p class='empty-message'>Completa desafios para vê-los aqui! 🌟</p>";
+  } else {
+    completed.forEach(challenge => {
+      const card = document.createElement("div");
+      card.classList.add("challenge-card completed-challenge");
+      
+      card.innerHTML = `
+        <div class="challenge-header">
+          <span class="challenge-icon">${challenge.icon}</span>
+          <div class="challenge-info">
+            <strong>${challenge.title}</strong>
+            <p>${challenge.description}</p>
+          </div>
+          <span class="challenge-points-earned">+${challenge.points}pts ✨</span>
+        </div>
+        <p class="completed-date">Completado em: ${challenge.completedDate}</p>
+      `;
+      
+      completedList.appendChild(card);
+    });
+  }
+}
+
+function completeChallenge(challengeId) {
+  let userChallenges = JSON.parse(localStorage.getItem("userChallenges")) || [];
+  let userPoints = JSON.parse(localStorage.getItem("userPoints")) || 0;
+  
+  const challenge = userChallenges.find(c => c.id === challengeId);
+  if (challenge && !challenge.completed) {
+    challenge.completed = true;
+    challenge.completedDate = new Date().toLocaleString('pt-PT', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    userPoints += challenge.points;
+    
+    localStorage.setItem("userChallenges", JSON.stringify(userChallenges));
+    localStorage.setItem("userPoints", JSON.stringify(userPoints));
+    
+    alert(`Parabéns! Ganhaste ${challenge.points} pontos! 🎉`);
+    loadChallengesView();
+  }
+}
+
+// Load challenges on challenges page
+if (challengesList) {
+  loadChallengesView();
+}
+
+// === EMPATHY PODIUM (empathy-podium.html) ===
+
+const medalPodium = document.getElementById("medalPodium");
+const leaderboard = document.getElementById("leaderboard");
+
+function calculateAllScores() {
+  let allScores = {};
+  
+  const userFriends = JSON.parse(localStorage.getItem("userFriends")) || [];
+  const username = localStorage.getItem("username");
+  
+  userFriends.forEach(friend => {
+    allScores[friend.name] = friend.points;
+  });
+  
+  // Adicionar pontos do utilizador
+  const userPoints = JSON.parse(localStorage.getItem("userPoints")) || 0;
+  allScores[username] = userPoints;
+  
+  return allScores;
+}
+
+function loadPodiumView() {
+  if (!medalPodium) return;
+  
+  const scores = calculateAllScores();
+  const sortedScores = Object.entries(scores)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+  
+  medalPodium.innerHTML = "";
+  
+  if (sortedScores.length === 0) {
+    medalPodium.innerHTML = "<p class='empty-message'>Começa a ganhar pontos! 💖</p>";
+  } else {
+    const positions = [2, 0, 1]; // Para ordenar 1º, 2º, 3º corretamente
+    const medals = ["🥇", "🥈", "🥉"];
+    
+    sortedScores.forEach((entry, idx) => {
+      const [name, points] = entry;
+      const position = idx;
+      const medal = medals[position];
+      
+      const medalCard = document.createElement("div");
+      medalCard.classList.add("medal-card");
+      medalCard.classList.add(position === 0 ? "first" : position === 1 ? "second" : "third");
+      
+      medalCard.innerHTML = `
+        <div class="medal-emoji">${medal}</div>
+        <div class="medal-name">${name}</div>
+        <div class="medal-points">${points} pontos</div>
+      `;
+      
+      medalPodium.appendChild(medalCard);
+    });
+  }
+  
+  // Carregar leaderboard completo
+  if (leaderboard) {
+    leaderboard.innerHTML = "";
+    
+    const scores = calculateAllScores();
+    const sortedScores = Object.entries(scores)
+      .sort((a, b) => b[1] - a[1]);
+    
+    if (sortedScores.length === 0) {
+      leaderboard.innerHTML = "<p class='empty-message'>Nenhuma amiga ainda. Começa a ganhar pontos! 💪</p>";
+    } else {
+      sortedScores.forEach((entry, idx) => {
+        const [name, points] = entry;
+        
+        const row = document.createElement("div");
+        row.classList.add("leaderboard-row");
+        
+        const rank = idx + 1;
+        const rankMedal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `${rank}º`;
+        
+        row.innerHTML = `
+          <div class="rank">${rankMedal}</div>
+          <div class="name">${name}</div>
+          <div class="points">${points} pts</div>
+        `;
+        
+        leaderboard.appendChild(row);
+      });
+    }
+  }
+}
+
+// Load podium on podium page
+if (medalPodium) {
+  loadPodiumView();
+}
