@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registar - Girlhood Spectrum</title>
+  <link rel="stylesheet" href="styles-new.css">
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
+</head>
+<body class="auth-page">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">🌷 Girlhood Spectrum</a>
+      <div class="nav-buttons">
+        <a href="login.html" class="btn btn-secondary">Entrar</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Auth Container -->
+  <div class="auth-container">
+    <div class="auth-box">
+      <h1>Bem-vinda! 🌟</h1>
+      <p class="auth-subtitle">Cria a tua conta e começa a partilhar sentimentos com amigas</p>
+
+      <form id="signupForm" class="auth-form">
+        <div class="form-group">
+          <label for="username">Nome de Utilizador</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username"
+            placeholder="ex: Sofia_2008"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email"
+            placeholder="o_teu_email@exemplo.com"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Palavra-passe</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password"
+            placeholder="Mínimo 8 caracteres"
+            required
+            minlength="8"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password-confirm">Confirmar Palavra-passe</label>
+          <input 
+            type="password" 
+            id="password-confirm" 
+            name="password-confirm"
+            placeholder="••••••••"
+            required
+          >
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms" name="terms" required>
+          <label for="terms">Concordo com os Termos de Serviço e Privacidade</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          Criar Conta ✨
+        </button>
+      </form>
+
+      <div class="divider">ou</div>
+
+      <button type="button" class="btn btn-secondary btn-block" onclick="signupWithGoogle()">
+        🔐 Registar com Google
+      </button>
+
+      <div class="auth-footer">
+        <p>Já tens conta? <a href="login.html">Entra aqui</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

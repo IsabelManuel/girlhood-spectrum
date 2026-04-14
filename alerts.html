@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alertas - Girlhood Spectrum</title>
+  <link rel="stylesheet" href="styles-new.css">
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
+</head>
+<body class="dashboard-page">
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">🌷 Girlhood Spectrum</a>
+      <div class="nav-buttons">
+        <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+        <a href="profile.html" class="btn btn-ghost">Perfil</a>
+        <button onclick="logout()" class="btn btn-ghost">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-card">
+        <h3>Menu</h3>
+        <ul class="sidebar-menu">
+          <li><a href="dashboard.html">📊 Dashboard</a></li>
+          <li><a href="group.html">👫 Meu Grupo</a></li>
+          <li><a href="alerts.html">📬 Alertas</a></li>
+          <li><a href="profile.html">👤 Perfil</a></li>
+          <li><a href="settings.html">⚙️ Definições</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="dashboard-content">
+      <!-- New Alerts -->
+      <section class="content-section">
+        <h2>📬 Alertas do Grupo</h2>
+        <div id="alertsContainer" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem;">
+          <!-- Alerts will be populated here by alerts.js -->
+        </div>
+      </section>
+
+      <!-- Empty State -->
+      <section id="emptyState" class="content-section" style="display: none; text-align: center; padding: 3rem;">
+        <p style="font-size: 2rem; margin-bottom: 1rem;">✨</p>
+        <h3>Nenhum alerta no momento</h3>
+        <p style="color: var(--text-secondary); margin-top: 1rem;">Quando alguém do teu grupo tiver sentimentos difíceis, verás aqui!</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="alerts.js"></script>
+</body>
+</html>
