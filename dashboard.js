@@ -51,71 +51,6 @@ function updateDashboardPoints() {
   }
 }
 
-// Get groups from localStorage
-function getGroups() {
-  return JSON.parse(localStorage.getItem('groups') || '{}');
-}
-
-// Get user's group (if member)
-function getUserGroup() {
-  const userEmail = localStorage.getItem('userEmail');
-  if (!userEmail) return null;
-  
-  const groups = getGroups();
-  for (let groupId in groups) {
-    const group = groups[groupId];
-    if (group.members.includes(userEmail)) {
-      return { id: groupId, ...group };
-    }
-  }
-  
-  return null;
-}
-
-// Alert sentiments
-const alertSentiments = {
-  'sad': { emoji: '😢', label: 'está triste' },
-  'fear': { emoji: '😨', label: 'está com medo' },
-  'anxious': { emoji: '😰', label: 'está ansiosa' },
-  'angry': { emoji: '😠', label: 'está irritada' }
-};
-
-// Get alerts from group
-function getGroupAlerts() {
-  const userEmail = localStorage.getItem('userEmail');
-  const userGroup = getUserGroup();
-  
-  if (!userGroup) return [];
-  
-  const users = JSON.parse(localStorage.getItem('users') || '[]');
-  const alerts = [];
-  
-  userGroup.members.forEach(memberEmail => {
-    if (memberEmail === userEmail) return;
-    
-    const user = users.find(u => u.email === memberEmail);
-    if (!user) return;
-    
-    const moodHistoryKey = 'moodHistory_' + memberEmail;
-    const moods = JSON.parse(localStorage.getItem(moodHistoryKey) || '[]');
-    
-    moods.forEach(mood => {
-      if (alertSentiments[mood.mood]) {
-        alerts.push({
-          memberName: user.name,
-          mood: mood.mood,
-          sentiment: alertSentiments[mood.mood],
-          intensity: mood.intensity,
-          timestamp: mood.timestamp
-        });
-      }
-    });
-  });
-  
-  alerts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  return alerts;
-}
-
 // Update alerts display (not needed anymore - alerts section removed)
 function updateAlertsDisplay() {
   // This function is deprecated as alerts section was removed from dashboard
@@ -260,11 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.location.href = 'login.html';
   }
   
-  // Update notification badge
-  updateNotificationBadge();
-  
-  // Update badge every 5 seconds
-  setInterval(updateNotificationBadge, 5000);
 });
 
 // Submit Mood
@@ -312,19 +242,3 @@ function submitMood() {
   document.getElementById('notes').value = '';
 }
 
-// ============================================
-// NOTIFICATION BADGE UPDATE
-// ============================================
-
-// Update notification badge
-function updateNotificationBadge() {
-  const alertBadgeElement = document.getElementById('alertBadge');
-  const alerts = getGroupAlerts(); // Function from alerts.js
-  
-  if (alerts.length > 0) {
-    alertBadgeElement.textContent = alerts.length;
-    alertBadgeElement.style.display = 'flex';
-  } else {
-    alertBadgeElement.style.display = 'none';
-  }
-}

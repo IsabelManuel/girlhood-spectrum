@@ -96,10 +96,12 @@ function getGroupAlerts() {
 
 // Render alerts on page
 function renderAlerts() {
-  const userGroup = getUserGroup();
   const alertsContainer = document.getElementById('alertsContainer');
+  if (!alertsContainer) return; // Não estamos na página de alertas
+
+  const userGroup = getUserGroup();
   const emptyState = document.getElementById('emptyState');
-  
+
   if (!userGroup) {
     // User not in a group
     alertsContainer.innerHTML = `

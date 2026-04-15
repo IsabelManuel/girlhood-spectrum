@@ -60,35 +60,55 @@ function getFilteredMoods(days) {
 // CHART FUNCTIONS
 // ============================================
 
+// Group entries by day: average intensity, keep most recent mood
+function groupByDay(moods) {
+  const dayMap = {};
+  moods.forEach(m => {
+    const d = new Date(m.timestamp);
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    if (!dayMap[key]) {
+      dayMap[key] = { entries: [], date: d };
+    }
+    dayMap[key].entries.push(m);
+  });
+
+  return Object.values(dayMap).map(({ entries, date }) => {
+    const last = entries[entries.length - 1];
+    const avgIntensity = Math.round(entries.reduce((s, e) => s + e.intensity, 0) / entries.length);
+    return { ...last, intensity: avgIntensity, date };
+  });
+}
+
 function createChart(moods) {
   const canvas = document.getElementById('moodChart');
   const emptyState = document.getElementById('chartEmptyState');
-  
+
   if (moods.length === 0) {
     canvas.style.display = 'none';
     emptyState.style.display = 'flex';
     return;
   }
-  
+
   canvas.style.display = 'block';
   emptyState.style.display = 'none';
-  
+
+  // Aggregate by day to avoid duplicate labels
+  const chartMoods = groupByDay(moods);
+
   // Prepare data
-  const labels = moods.map(m => {
+  const labels = chartMoods.map(m => {
     const d = new Date(m.timestamp);
     if (currentPeriod <= 7) {
       return d.toLocaleDateString('pt-PT', { weekday: 'short', day: 'numeric' });
-    } else if (currentPeriod <= 30) {
-      return d.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
     } else {
       return d.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
     }
   });
-  
-  const moodDataPoints = moods.map(m => moodValues[m.mood] ?? 3);
-  const intensityPoints = moods.map(m => m.intensity);
-  const pointColors = moods.map(m => moodColors[m.mood] || '#a855f7');
-  const pointEmojis = moods.map(m => moodEmojis[m.mood] || '😊');
+
+  const moodDataPoints = chartMoods.map(m => moodValues[m.mood] ?? 3);
+  const intensityPoints = chartMoods.map(m => m.intensity);
+  const pointColors = chartMoods.map(m => moodColors[m.mood] || '#a855f7');
+  const pointEmojis = chartMoods.map(m => moodEmojis[m.mood] || '😊');
   
   // Destroy existing chart
   if (moodChart) {
@@ -182,14 +202,14 @@ function createChart(moods) {
             },
             label: function(context) {
               if (context.datasetIndex === 0) {
-                const mood = moods[context.dataIndex];
+                const mood = chartMoods[context.dataIndex];
                 return `  ${moodEmojis[mood.mood]} ${moodLabels[mood.mood]}`;
               } else {
                 return `  Intensidade: ${context.parsed.y}/10`;
               }
             },
             afterBody: function(items) {
-              const mood = moods[items[0].dataIndex];
+              const mood = chartMoods[items[0].dataIndex];
               if (mood.notes) {
                 return [`  📝 "${mood.notes}"`];
               }
@@ -230,17 +250,18 @@ function createChart(moods) {
         },
         y1: {
           position: 'right',
-          min: 0,
-          max: 11,
+          min: 1,
+          max: 10,
           grid: {
             drawOnChartArea: false
           },
           ticks: {
-            stepSize: 2,
+            stepSize: 1,
             font: { size: 11 },
             color: '#e91e80',
             callback: function(value) {
-              return value + '/10';
+              if (Number.isInteger(value)) return value + '/10';
+              return '';
             }
           }
         }
