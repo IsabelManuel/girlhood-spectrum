@@ -94,10 +94,59 @@ function getGroupAlerts() {
   return alerts;
 }
 
+// Render urgent fear alerts at the top of the page
+function renderFearAlerts() {
+  const container = document.getElementById('fearAlertsContainer');
+  if (!container) return;
+
+  const userEmail = localStorage.getItem('userEmail');
+  const userGroup = getUserGroup();
+  if (!userGroup || !userEmail) { container.style.display = 'none'; return; }
+
+  const fearAlerts = JSON.parse(localStorage.getItem('fearAlerts') || '[]');
+  const recent = fearAlerts.filter(a =>
+    a.groupId === userGroup.id &&
+    a.senderEmail !== userEmail
+  ).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  if (recent.length === 0) { container.style.display = 'none'; return; }
+
+  container.style.display = 'block';
+  container.innerHTML = `
+    <div class="fear-alerts-section">
+      <div class="fear-alerts-section__header">
+        <span>😨</span>
+        <div>
+          <h3>Alertas de Medo</h3>
+          <p>Estas pessoas do teu grupo registaram medo. Estão a precisar de apoio.</p>
+        </div>
+      </div>
+      <div class="fear-alerts-list">
+        ${recent.map(a => `
+          <div class="fear-alert-card">
+            <span class="fear-alert-card__emoji">😨</span>
+            <div class="fear-alert-card__info">
+              <strong>${a.senderName}</strong>
+              <span>registou que está com medo</span>
+              <span class="fear-alert-card__time">${formatTimeAgo(a.timestamp)}</span>
+            </div>
+            <div class="fear-alert-card__btns">
+              <button class="btn btn-small btn-secondary" onclick="sendMessage('${a.senderEmail}')">💬 Chat</button>
+              <button class="btn btn-small btn-primary" onclick="sendSupport('${a.senderEmail}')">❤️ Apoio</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
 // Render alerts on page
 function renderAlerts() {
   const alertsContainer = document.getElementById('alertsContainer');
   if (!alertsContainer) return; // Não estamos na página de alertas
+
+  renderFearAlerts();
 
   const userGroup = getUserGroup();
   const emptyState = document.getElementById('emptyState');

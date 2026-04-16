@@ -117,6 +117,283 @@ function updateLastMoodDisplay() {
   intensity.innerHTML = dotsHTML;
 }
 
+// ============================================
+// FEAR ALERT SYSTEM
+// ============================================
+
+// Save a fear alert for all group members to see
+function saveFearAlert() {
+  const userEmail = localStorage.getItem('userEmail');
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  const user = users.find(u => u.email === userEmail);
+  const userName = user ? user.name : (localStorage.getItem('username') || 'Alguém');
+
+  const userGroup = typeof getUserGroup === 'function' ? getUserGroup() : null;
+  if (!userGroup) return;
+
+  const newAlert = {
+    id: Date.now(),
+    senderEmail: userEmail,
+    senderName: userName,
+    groupId: userGroup.id,
+    timestamp: new Date().toISOString(),
+    readBy: [userEmail]
+  };
+
+  const fearAlerts = JSON.parse(localStorage.getItem('fearAlerts') || '[]');
+  fearAlerts.push(newAlert);
+  localStorage.setItem('fearAlerts', JSON.stringify(fearAlerts));
+}
+
+// Check for unread fear alerts from group members and show banner
+function checkFearAlerts() {
+  const userEmail = localStorage.getItem('userEmail');
+  const userGroup = typeof getUserGroup === 'function' ? getUserGroup() : null;
+  if (!userGroup || !userEmail) return;
+
+  const fearAlerts = JSON.parse(localStorage.getItem('fearAlerts') || '[]');
+
+  const unread = fearAlerts.filter(a =>
+    a.groupId === userGroup.id &&
+    a.senderEmail !== userEmail &&
+    !a.readBy.includes(userEmail)
+  );
+
+  if (unread.length === 0) return;
+
+  const banner = document.getElementById('fearAlertBanner');
+  const textEl = document.getElementById('fearAlertText');
+  if (!banner || !textEl) return;
+
+  if (unread.length === 1) {
+    textEl.textContent = `${unread[0].senderName} está com medo e pode precisar do teu apoio.`;
+  } else {
+    const names = unread.map(a => a.senderName).join(', ');
+    textEl.textContent = `${names} estão com medo e podem precisar do teu apoio.`;
+  }
+
+  banner.style.display = 'flex';
+}
+
+// Dismiss fear alert banner and mark as read
+function dismissFearAlerts() {
+  const userEmail = localStorage.getItem('userEmail');
+  const userGroup = typeof getUserGroup === 'function' ? getUserGroup() : null;
+  if (!userGroup || !userEmail) return;
+
+  const fearAlerts = JSON.parse(localStorage.getItem('fearAlerts') || '[]');
+  fearAlerts.forEach(a => {
+    if (a.groupId === userGroup.id && !a.readBy.includes(userEmail)) {
+      a.readBy.push(userEmail);
+    }
+  });
+  localStorage.setItem('fearAlerts', JSON.stringify(fearAlerts));
+
+  const banner = document.getElementById('fearAlertBanner');
+  if (banner) banner.style.display = 'none';
+}
+
+// Activities per mood
+const moodActivities = {
+  sad: {
+    icon: '💙',
+    subtitle: 'Estamos aqui por ti. Experimenta uma destas atividades:',
+    activities: [
+      {
+        icon: '🎵',
+        label: 'Ouvir uma música relaxante',
+        description: 'Uma melodia suave para te ajudar a sentir melhor',
+        action: 'link',
+        url: 'https://www.youtube.com/watch?v=PqK2ImIUEMA&list=PLJ7_FMxCfRj2M3y4-ZkSSLevOXG4sS9BJ'
+      },
+      {
+        icon: '🌬️',
+        label: 'Respiração profunda',
+        description: 'Inspira 4 segundos, segura 4, expira 4. Repete 5 vezes.',
+        action: 'text'
+      },
+      {
+        icon: '📓',
+        label: 'Escreve os teus sentimentos',
+        description: 'Usa as notas abaixo para escrever o que estás a sentir.',
+        action: 'focus',
+        target: 'notes'
+      }
+    ]
+  },
+  anxious: {
+    icon: '🌿',
+    subtitle: 'Vai devagar. Aqui estão algumas formas de te acalmar:',
+    activities: [
+      {
+        icon: '🌬️',
+        label: 'Técnica 4-7-8',
+        description: 'Inspira 4 seg, segura 7 seg, expira 8 seg. Repete 3 vezes.',
+        action: 'text'
+      },
+      {
+        icon: '🎵',
+        label: 'Música calma',
+        description: 'Uma melodia suave para baixar a ansiedade',
+        action: 'link',
+        url: 'https://www.youtube.com/watch?v=yQqjZAqNf9Y'
+      },
+      {
+        icon: '🌳',
+        label: 'Regra dos 5 sentidos',
+        description: 'Encontra 5 coisas que vês, 4 que tocas, 3 que ouves, 2 que cheiras, 1 que saboreias.',
+        action: 'text'
+      }
+    ]
+  },
+  angry: {
+    icon: '🔥',
+    subtitle: 'É normal sentir raiva. Tenta uma destas atividades:',
+    activities: [
+      {
+        icon: '🌬️',
+        label: 'Respira fundo',
+        description: 'Para tudo. Inspira pelo nariz, expira pela boca, 5 vezes.',
+        action: 'text'
+      },
+      {
+        icon: '📓',
+        label: 'Escreve o que estás a sentir',
+        description: 'Escreve sem filtros nas notas abaixo. Ninguém vai ver.',
+        action: 'focus',
+        target: 'notes'
+      },
+      {
+        icon: '🎵',
+        label: 'Ouvir música',
+        description: 'Uma melodia para ajudar a descomprimir',
+        action: 'link',
+        url: 'https://www.youtube.com/watch?v=N63-oDNTtic&list=RDN63-oDNTtic&start_radio=1'
+      }
+    ]
+  },
+  happy: {
+    icon: '✨',
+    subtitle: 'Que bom! Aproveita este momento:',
+    activities: [
+      {
+        icon: '💃',
+        label: 'Dança um pouco!',
+        description: 'Coloca a tua música favorita e deixa o corpo mover-se.',
+        action: 'text'
+      },
+      {
+        icon: '📓',
+        label: 'Regista este momento',
+        description: 'Escreve o que te está a fazer sentir tão bem.',
+        action: 'focus',
+        target: 'notes'
+      },
+      {
+        icon: '🎵',
+        label: 'Ouvir música animada',
+        description: 'Uma música para celebrar o teu bom humor',
+        action: 'link',
+        url: 'https://www.youtube.com/watch?v=UtF6Jej8yb4&list=PLgogaB00wRYc0czjXfkevl6qGhrIGxSBO'
+      }
+    ]
+  },
+  neutral: {
+    icon: '🌤️',
+    subtitle: 'Um dia tranquilo. Talvez uma destas atividades te inspire:',
+    activities: [
+      {
+        icon: '🎵',
+        label: 'Ouvir música',
+        description: 'Uma melodia agradável para acompanhar o teu momento',
+        action: 'link',
+        url: 'https://www.youtube.com/watch?v=ZUBiQxrH09w&list=RDZUBiQxrH09w&start_radio=1'
+      },
+      {
+        icon: '🌬️',
+        label: 'Meditação de 2 minutos',
+        description: 'Fecha os olhos, foca na respiração durante 2 minutos.',
+        action: 'text'
+      },
+      {
+        icon: '📓',
+        label: 'Como foi o teu dia?',
+        description: 'Escreve um resumo do teu dia nas notas.',
+        action: 'focus',
+        target: 'notes'
+      }
+    ]
+  },
+  fear: {
+    icon: '🕯️',
+    subtitle: 'Estamos contigo. Experimenta uma destas atividades:',
+    activities: [
+      {
+        icon: '🌬️',
+        label: 'Respiração calmante',
+        description: 'Inspira lentamente 4 seg, expira 6 seg. O teu sistema nervoso vai agradecer.',
+        action: 'text'
+      },
+      {
+        icon: '🎵',
+        label: 'Música suave',
+        description: 'Uma melodia tranquila para te sentires mais segura',
+        action: 'link',
+        url: 'https://www.youtube.com/watch?v=syvVo8NX6RQ&list=RDsyvVo8NX6RQ&start_radio=1'
+      },
+      {
+        icon: '📓',
+        label: 'Escreve o que te preocupa',
+        description: 'Por vezes, colocar o medo em palavras ajuda a diminuí-lo.',
+        action: 'focus',
+        target: 'notes'
+      }
+    ]
+  }
+};
+
+// Show activities panel for selected mood
+function showActivities(mood) {
+  const panel = document.getElementById('activitiesPanel');
+  const data = moodActivities[mood];
+  if (!panel || !data) return;
+
+  document.getElementById('activitiesIcon').textContent = data.icon;
+  document.getElementById('activitiesTitle').textContent = 'O que queres fazer?';
+  document.getElementById('activitiesSubtitle').textContent = data.subtitle;
+
+  const list = document.getElementById('activitiesList');
+  list.innerHTML = data.activities.map((act, i) => `
+    <div class="activity-card activity-card--${mood}" onclick="handleActivity(${i}, '${mood}')">
+      <span class="activity-card__icon">${act.icon}</span>
+      <div class="activity-card__content">
+        <span class="activity-card__label">${act.label}</span>
+        <span class="activity-card__desc">${act.description}</span>
+      </div>
+      <span class="activity-card__arrow">→</span>
+    </div>
+  `).join('');
+
+  panel.style.display = 'block';
+}
+
+// Handle activity click
+function handleActivity(index, mood) {
+  const act = moodActivities[mood]?.activities[index];
+  if (!act) return;
+
+  if (act.action === 'link') {
+    window.open(act.url, '_blank', 'noopener,noreferrer');
+  } else if (act.action === 'focus') {
+    const target = document.getElementById(act.target);
+    if (target) {
+      target.focus();
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+  // 'text' actions just show the description — no extra behavior needed
+}
+
 // Mood Tracker
 let selectedMood = null;
 let moodBtns = [];
@@ -141,7 +418,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Update points from real data
   updateDashboardPoints();
-  
+
+  // Check for fear alerts from group members
+  checkFearAlerts();
+
   // Show last mood
   updateLastMoodDisplay();
   
@@ -155,7 +435,9 @@ document.addEventListener('DOMContentLoaded', function() {
       moodBtns.forEach((b) => b.classList.remove('active'));
       this.classList.add('active');
       selectedMood = this.dataset.mood;
-      
+
+      showActivities(selectedMood);
+
       const moodForm = document.getElementById('moodForm');
       if (moodForm) {
         moodForm.style.display = 'flex';
@@ -221,9 +503,14 @@ function submitMood() {
   moods.push(moodData);
   localStorage.setItem(moodHistoryKey, JSON.stringify(moods));
   
+  // If mood is fear, send urgent alert to group
+  if (selectedMood === 'fear') {
+    saveFearAlert();
+  }
+
   // Show success toast
   showSuccessToast();
-  
+
   // Update points display
   updateDashboardPoints();
   
@@ -237,6 +524,8 @@ function submitMood() {
   selectedMood = null;
   moodBtns.forEach((b) => b.classList.remove('active'));
   document.getElementById('moodForm').style.display = 'none';
+  const activitiesPanel = document.getElementById('activitiesPanel');
+  if (activitiesPanel) activitiesPanel.style.display = 'none';
   document.getElementById('intensity').value = 5;
   document.getElementById('intensityValue').textContent = '5';
   document.getElementById('notes').value = '';

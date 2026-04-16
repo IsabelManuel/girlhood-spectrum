@@ -43,6 +43,19 @@
     <!-- Main Content -->
     <main class="dashboard-content">
 
+      <!-- Fear Alert Banner -->
+      <div class="fear-alert-banner" id="fearAlertBanner" style="display: none;">
+        <span class="fear-alert-banner__icon">😨</span>
+        <div class="fear-alert-banner__body">
+          <strong class="fear-alert-banner__title">Alerta Urgente</strong>
+          <span class="fear-alert-banner__text" id="fearAlertText"></span>
+        </div>
+        <div class="fear-alert-banner__actions">
+          <a href="alerts.html" class="btn btn-small btn-primary">Ver alertas</a>
+          <button onclick="dismissFearAlerts()" class="btn btn-small btn-ghost fear-alert-banner__dismiss">✕</button>
+        </div>
+      </div>
+
       <!-- Welcome Header -->
       <section class="welcome-header">
         <div class="welcome-text">
@@ -85,6 +98,18 @@
               <button class="mood-btn mood-btn-fear" data-mood="fear" title="Medo" tabindex="0">😨</button>
               <span class="mood-label">Medo</span>
             </div>
+          </div>
+
+          <!-- Activities Panel -->
+          <div class="activities-panel" id="activitiesPanel" style="display: none;">
+            <div class="activities-header">
+              <span class="activities-icon" id="activitiesIcon"></span>
+              <div>
+                <h4 id="activitiesTitle">Atividades sugeridas</h4>
+                <p id="activitiesSubtitle"></p>
+              </div>
+            </div>
+            <div class="activities-list" id="activitiesList"></div>
           </div>
 
           <div class="mood-form" id="moodForm" style="display: none;">

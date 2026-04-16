@@ -1727,6 +1727,287 @@ p {
   border-color: rgba(184, 122, 252, 0.2);
 }
 
+/* ============================================
+   FEAR ALERT BANNER (dashboard)
+   ============================================ */
+
+.fear-alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.06));
+  border: 2px solid rgba(239, 68, 68, 0.5);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  animation: fearPulse 2s ease-in-out infinite, fadeIn 0.4s ease;
+}
+
+@keyframes fearPulse {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  50% { border-color: rgba(239, 68, 68, 0.9); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.08); }
+}
+
+.fear-alert-banner__icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.fear-alert-banner__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.fear-alert-banner__title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ef4444;
+}
+
+.fear-alert-banner__text {
+  font-size: 0.92rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.fear-alert-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.fear-alert-banner__dismiss {
+  color: var(--text-light);
+  padding: 0.25rem 0.5rem;
+}
+
+/* ============================================
+   FEAR ALERTS SECTION (alerts page)
+   ============================================ */
+
+.fear-alerts-section {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.04));
+  border: 2px solid rgba(239, 68, 68, 0.45);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  animation: fadeIn 0.4s ease;
+}
+
+.fear-alerts-section__header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.fear-alerts-section__header span {
+  font-size: 2.25rem;
+}
+
+.fear-alerts-section__header h3 {
+  font-size: 1.1rem;
+  color: #ef4444;
+  margin-bottom: 0.2rem;
+}
+
+.fear-alerts-section__header p {
+  font-size: 0.83rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.fear-alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fear-alert-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+}
+
+.fear-alert-card__emoji {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.fear-alert-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.88rem;
+  color: var(--text-light);
+}
+
+.fear-alert-card__info strong {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.fear-alert-card__time {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  opacity: 0.8;
+}
+
+.fear-alert-card__btns {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Dark mode - Fear alerts */
+[data-theme="dark"] .fear-alert-banner {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.07));
+}
+
+[data-theme="dark"] .fear-alerts-section {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.05));
+}
+
+[data-theme="dark"] .fear-alert-card {
+  background: rgba(20, 20, 40, 0.6);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* ============================================
+   ACTIVITIES PANEL
+   ============================================ */
+
+.activities-panel {
+  margin: 1.25rem 0 0.5rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(168, 85, 247, 0.18);
+  border-radius: 1rem;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.35s ease;
+}
+
+.activities-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.activities-icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.activities-header h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+  color: var(--text);
+}
+
+.activities-header p {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activity-card:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.12);
+}
+
+.activity-card__icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  width: 2.2rem;
+  text-align: center;
+}
+
+.activity-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.activity-card__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.activity-card__desc {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+.activity-card__arrow {
+  font-size: 1rem;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.activity-card:hover .activity-card__arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* Mood-specific accent colors */
+.activity-card--sad:hover    { border-color: rgba(59, 130, 246, 0.35); box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12); }
+.activity-card--anxious:hover { border-color: rgba(245, 158, 11, 0.35); box-shadow: 0 4px 16px rgba(245, 158, 11, 0.12); }
+.activity-card--angry:hover  { border-color: rgba(239, 68, 68, 0.35); box-shadow: 0 4px 16px rgba(239, 68, 68, 0.12); }
+.activity-card--happy:hover  { border-color: rgba(16, 185, 129, 0.35); box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12); }
+.activity-card--neutral:hover { border-color: rgba(107, 114, 128, 0.35); box-shadow: 0 4px 16px rgba(107, 114, 128, 0.12); }
+.activity-card--fear:hover   { border-color: rgba(139, 92, 246, 0.35); box-shadow: 0 4px 16px rgba(139, 92, 246, 0.12); }
+
+/* Dark mode - Activities */
+[data-theme="dark"] .activities-panel {
+  background: rgba(30, 30, 50, 0.65);
+  border-color: rgba(184, 122, 252, 0.2);
+}
+
+[data-theme="dark"] .activity-card {
+  background: rgba(20, 20, 40, 0.5);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .activity-card:hover {
+  background: rgba(40, 40, 65, 0.8);
+  border-color: rgba(184, 122, 252, 0.35);
+  box-shadow: 0 4px 16px rgba(184, 122, 252, 0.15);
+}
+
 /* Dark mode - Period selector */
 [data-theme="dark"] .period-selector {
   background: rgba(30, 30, 50, 0.5);
