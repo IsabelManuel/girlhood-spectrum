@@ -1483,10 +1483,16 @@ p {
   }
   .nav-buttons {
     gap: 0.4rem;
+    flex-shrink: 0;
   }
   .nav-buttons .btn {
     padding: 0.45rem 0.7rem;
     font-size: 0.8rem;
+  }
+  /* Ensure logo never wraps */
+  .nav-container .logo {
+    min-width: 0;
+    flex-shrink: 1;
   }
 
   /* Hero */
@@ -1580,23 +1586,24 @@ p {
   h1 { font-size: 1.5rem; }
   h2 { font-size: 1.2rem; }
 
-  /* Navbar — very small screens */
-  .logo {
-    font-size: 1rem;
+  /* Navbar — hide logo text, keep only the image */
+  .logo-text {
+    display: none;
   }
   .nav-logo-img {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+    margin-right: 0;
   }
   .lang-btn {
     padding: 0.35rem 0.55rem;
     font-size: 0.75rem;
   }
   .nav-buttons .btn {
-    padding: 0.4rem 0.55rem;
-    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
   }
-  /* Hide "Dashboard" / "Perfil" nav links on very small screens — keep only Sair + lang */
+  /* Hide "Dashboard" nav link on very small screens — keep Sair + lang */
   .nav-buttons .btn-ghost:not([onclick]) {
     display: none;
   }
