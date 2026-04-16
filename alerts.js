@@ -40,32 +40,37 @@ async function renderSupportReceived() {
   if (!container) return;
 
   const result = await apiGet('api/support.php');
-  if (!result.success) return;
-
-  const unread = result.notifications.filter(n => n.is_read === 0);
-  if (unread.length === 0) {
+  if (!result.success || result.notifications.length === 0) {
     container.style.display = 'none';
     return;
   }
 
-  // Mark as read
-  apiPost('api/support.php', { action: 'mark_read' });
+  const hasUnread = result.notifications.some(n => parseInt(n.is_read) === 0);
 
   container.style.display = 'block';
   container.innerHTML = `
     <div class="content-section" style="border: 2px solid #10b981; background: rgba(16,185,129,0.06);">
-      <h3 style="color: #10b981; margin-bottom: 1rem;">💚 Apoio Recebido</h3>
-      ${unread.map(n => `
-        <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem 0; border-bottom: 1px solid rgba(16,185,129,0.15);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="color:#10b981; margin:0;">💚 Apoio Recebido${hasUnread ? ' <span style="background:#10b981;color:#fff;font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:999px;vertical-align:middle;">Novo</span>' : ''}</h3>
+        ${hasUnread ? `<button onclick="markSupportRead()" style="background:none;border:none;font-size:0.8rem;color:var(--text-light);cursor:pointer;">✓ Marcar como lido</button>` : ''}
+      </div>
+      ${result.notifications.map(n => `
+        <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem 0; border-bottom:1px solid rgba(16,185,129,0.15); ${parseInt(n.is_read) === 0 ? 'background:rgba(16,185,129,0.08);border-radius:0.5rem;padding-left:0.5rem;' : 'opacity:0.7;'}">
           <span style="font-size:1.5rem;">❤️</span>
           <div>
             <p style="font-weight:600; margin:0;"><strong>${n.sender_name}</strong> enviou-te apoio</p>
             <p style="font-size:0.8rem; color:var(--text-light); margin:0.2rem 0 0;">${formatTimeAgo(n.timestamp)}</p>
           </div>
+          ${parseInt(n.is_read) === 0 ? '<span style="margin-left:auto;background:#10b981;color:#fff;font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:999px;">Novo</span>' : ''}
         </div>
       `).join('')}
     </div>
   `;
+}
+
+async function markSupportRead() {
+  await apiPost('api/support.php', { action: 'mark_read' });
+  renderSupportReceived();
 }
 
 // ============================================
@@ -193,6 +198,7 @@ async function sendSupport(receiverId, memberName, btn) {
   } else {
     btn.disabled = false;
     btn.textContent = '❤️ Apoio';
+    alert('❌ Não foi possível enviar apoio: ' + (result.error || 'Erro desconhecido'));
   }
 }
 

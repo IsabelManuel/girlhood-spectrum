@@ -16,17 +16,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Verify both users are in the same group
+        // Verify sender is in a group
         $groupId = getGroupId($pdo, $userId);
         if (!$groupId) {
             echo json_encode(['success' => false, 'error' => 'Sem grupo']);
             exit;
         }
 
-        $stmt = $pdo->prepare('INSERT INTO support_notifications (sender_id, receiver_id) VALUES (?, ?)');
-        $stmt->execute([$userId, $receiverId]);
-
-        echo json_encode(['success' => true]);
+        try {
+            $stmt = $pdo->prepare('INSERT INTO support_notifications (sender_id, receiver_id) VALUES (?, ?)');
+            $stmt->execute([$userId, $receiverId]);
+            echo json_encode(['success' => true]);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'error' => 'Tabela não encontrada. Cria a tabela support_notifications no phpMyAdmin.']);
+        }
 
     } elseif ($action === 'mark_read') {
         $stmt = $pdo->prepare('UPDATE support_notifications SET is_read = 1 WHERE receiver_id = ?');
@@ -45,8 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         FROM support_notifications sn
         JOIN users u ON sn.sender_id = u.id
         WHERE sn.receiver_id = ?
+          AND sn.created_at >= NOW() - INTERVAL 7 DAY
         ORDER BY sn.created_at DESC
-        LIMIT 20
+        LIMIT 50
     ');
     $stmt->execute([$userId]);
     $notifications = $stmt->fetchAll();

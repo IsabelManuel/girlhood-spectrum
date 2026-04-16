@@ -3,18 +3,26 @@
 // ============================================
 
 async function apiPost(url, data) {
-  const res = await fetch(url, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  return res.json();
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return await res.json();
+  } catch (e) {
+    return { success: false, error: 'Erro de ligação ao servidor' };
+  }
 }
 
 async function apiGet(url) {
-  const res = await fetch(url, { credentials: 'include' });
-  return res.json();
+  try {
+    const res = await fetch(url, { credentials: 'include' });
+    return await res.json();
+  } catch (e) {
+    return { success: false, error: 'Erro de ligação ao servidor' };
+  }
 }
 
 // ============================================
