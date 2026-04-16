@@ -3,91 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Girlhood Spectrum - Onde a amizade se transforma em apoio real</title>
+  <title>Girlhood Spectrum</title>
   <link rel="stylesheet" href="styles-new.css">
   <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
-      <div class="logo">🌷 Girlhood Spectrum</div>
+      <div class="logo"><img src="Logo_girlhood_spectrum_png-removebg.png" alt="Girlhood Spectrum" class="nav-logo-img"> Girlhood Spectrum</div>
       <div class="nav-buttons">
-        <a href="login.html" class="btn btn-ghost">Entrar</a>
-        <a href="signup.html" class="btn btn-primary">Registar</a>
+        <div class="lang-switcher">
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+        <a href="login.html"  class="btn btn-ghost"   data-i18n="nav.login">Entrar</a>
+        <a href="signup.html" class="btn btn-primary" data-i18n="nav.register">Registar</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="hero">
     <div class="container">
-      <h1 class="hero-title">
+      <h1 class="hero-title" data-i18n="index.heroTitle">
         A amizade se transforma em <span class="gradient-text">apoio real</span>
       </h1>
-      <p class="hero-subtitle">
-        Partilha sentimentos, ajuda as tuas amigas e sobe no pódio da empatia.
-        Um espaço seguro, acolhedor e pensado para raparigas como tu.
+      <p class="hero-subtitle" data-i18n="index.heroSubtitle">
+        Partilha sentimentos, ajuda as tuas amigas. Um espaço seguro, acolhedor e pensado para raparigas como tu.
       </p>
-      <a href="signup.html" class="btn btn-large btn-primary">
-        ✨ Começar Agora
-      </a>
+      <a href="signup.html" class="btn btn-large btn-primary" data-i18n="index.heroBtn">✨ Começar Agora</a>
     </div>
   </section>
 
-  <!-- Features Section -->
   <section class="features">
     <div class="container">
-      <h2>O que te espera 🌟</h2>
+      <h2 data-i18n="index.featTitle">O que te espera 🌟</h2>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">❤️</div>
-          <h3>Partilha Sentimentos</h3>
-          <p>Regista como te sentes todos os dias e recebe apoio do teu grupo</p>
+          <h3 data-i18n="feat.shareTitle">Partilha Sentimentos</h3>
+          <p  data-i18n="feat.shareDesc">Regista como te sentes todos os dias e recebe apoio do teu grupo</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">👫</div>
-          <h3>Grupos Privados</h3>
-          <p>Cria grupos com as tuas amigas e apoiem-se mutuamente</p>
+          <h3 data-i18n="feat.groupTitle">Grupos Privados</h3>
+          <p  data-i18n="feat.groupDesc">Cria grupos com as tuas amigas e apoiem-se mutuamente</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
-          <h3>Alertas de Apoio</h3>
-          <p>Recebe notificações quando uma amiga precisa de ti</p>
+          <h3 data-i18n="feat.alertTitle">Alertas de Apoio</h3>
+          <p  data-i18n="feat.alertDesc">Recebe notificações quando uma amiga precisa de ti</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🏆</div>
-          <h3>Desafios Positivos</h3>
-          <p>Completa desafios de bem-estar e ganha pontos</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">✨</div>
-          <h3>Pódio de Amigas</h3>
-          <p>Vê quem está no topo baseado em empatia e apoio</p>
+          <h3 data-i18n="feat.challengeTitle">Desafios Positivos</h3>
+          <p  data-i18n="feat.challengeDesc">Completa desafios de bem-estar e ganha pontos</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🛡️</div>
-          <h3>100% Seguro</h3>
-          <p>Os teus dados são privados. Confia no teu espaço.</p>
+          <h3 data-i18n="feat.safeTitle">100% Seguro</h3>
+          <p  data-i18n="feat.safeDesc">Os teus dados são privados. Confia no teu espaço.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
   <section class="cta">
     <div class="container">
       <div class="cta-card">
-        <h3>Pronta para começar? 🚀</h3>
-        <p>Junta-te a milhares de raparigas que já estão a criar conexões reais através de apoio emocional autêntico.</p>
-        <a href="signup.html" class="btn btn-primary">Criar Conta Agora</a>
+        <h3 data-i18n="cta.title">Pronta para começar? 🚀</h3>
+        <p  data-i18n="cta.desc">Junta-te a milhares de raparigas que já estão a criar conexões reais através de apoio emocional autêntico.</p>
+        <a href="signup.html" class="btn btn-primary" data-i18n="cta.btn">Criar Conta Agora</a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
-    <p>© 2026 Girlhood Spectrum. Construído com 💖 para apoio emocional real.</p>
+    <p data-i18n="footer.text">© 2026 Girlhood Spectrum. Construído com 💖 para apoio emocional real.</p>
   </footer>
+
+  <script src="lang.js"></script>
 </body>
 </html>

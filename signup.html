@@ -8,90 +8,59 @@
   <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
 <body class="auth-page">
-  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
-      <a href="index.html" class="logo">🌷 Girlhood Spectrum</a>
+      <a href="index.html" class="logo"><img src="Logo_girlhood_spectrum_png-removebg.png" alt="Girlhood Spectrum" class="nav-logo-img"> Girlhood Spectrum</a>
       <div class="nav-buttons">
-        <a href="login.html" class="btn btn-secondary">Entrar</a>
+        <div class="lang-switcher">
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+        <a href="login.html" class="btn btn-secondary" data-i18n="nav.login">Entrar</a>
       </div>
     </div>
   </nav>
 
-  <!-- Auth Container -->
   <div class="auth-container">
     <div class="auth-box">
-      <h1>Bem-vinda! 🌟</h1>
-      <p class="auth-subtitle">Cria a tua conta e começa a partilhar sentimentos com amigas</p>
+      <h1 data-i18n="signup.title">Bem-vinda! 🌟</h1>
+      <p class="auth-subtitle" data-i18n="signup.subtitle">Cria a tua conta e começa a partilhar sentimentos com amigas</p>
 
       <form id="signupForm" class="auth-form">
         <div class="form-group">
-          <label for="username">Nome de Utilizador</label>
-          <input 
-            type="text" 
-            id="username" 
-            name="username"
-            placeholder="ex: Sofia_2008"
-            required
-          >
+          <label for="username" data-i18n="signup.nameLabel">Nome de Utilizador</label>
+          <input type="text" id="username" name="username" placeholder="ex: Sofia_2008" data-i18n-placeholder="signup.namePH" required>
         </div>
-
         <div class="form-group">
-          <label for="email">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email"
-            placeholder="o_teu_email@exemplo.com"
-            required
-          >
+          <label for="email" data-i18n="signup.emailLabel">Email</label>
+          <input type="email" id="email" name="email" placeholder="o_teu_email@exemplo.com" data-i18n-placeholder="signup.emailPH" required>
         </div>
-
         <div class="form-group">
-          <label for="password">Palavra-passe</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password"
-            placeholder="Mínimo 8 caracteres"
-            required
-            minlength="8"
-          >
+          <label for="password" data-i18n="signup.passLabel">Palavra-passe</label>
+          <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" data-i18n-placeholder="signup.passPH" required minlength="8">
         </div>
-
         <div class="form-group">
-          <label for="password-confirm">Confirmar Palavra-passe</label>
-          <input 
-            type="password" 
-            id="password-confirm" 
-            name="password-confirm"
-            placeholder="••••••••"
-            required
-          >
+          <label for="password-confirm" data-i18n="signup.confirmLabel">Confirmar Palavra-passe</label>
+          <input type="password" id="password-confirm" name="password-confirm" placeholder="••••••••" required>
         </div>
-
         <div class="checkbox-group">
           <input type="checkbox" id="terms" name="terms" required>
-          <label for="terms">Concordo com os Termos de Serviço e Privacidade</label>
+          <label for="terms" data-i18n="signup.terms">Concordo com os Termos de Serviço e Privacidade</label>
         </div>
-
-        <button type="submit" class="btn btn-primary btn-block">
-          Criar Conta ✨
-        </button>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="signup.btn">Criar Conta ✨</button>
       </form>
 
-      <div class="divider">ou</div>
+      <div class="divider" data-i18n="signup.divider">ou</div>
 
-      <button type="button" class="btn btn-secondary btn-block" onclick="signupWithGoogle()">
-        🔐 Registar com Google
-      </button>
+      <button type="button" class="btn btn-secondary btn-block" onclick="signupWithGoogle()" data-i18n="signup.googleBtn">🔐 Registar com Google</button>
 
       <div class="auth-footer">
-        <p>Já tens conta? <a href="login.html">Entra aqui</a></p>
+        <p><span data-i18n="signup.haveAccount">Já tens conta?</span> <a href="login.html" data-i18n="signup.loginHere">Entra aqui</a></p>
       </div>
     </div>
   </div>
 
+  <script src="lang.js"></script>
   <script src="auth.js"></script>
 </body>
 </html>

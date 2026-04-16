@@ -4,137 +4,123 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rastrear Humor - Girlhood Spectrum</title>
-  <meta name="description" content="Visualiza o teu histórico de humor ao longo do tempo com gráficos interativos.">
   <link rel="stylesheet" href="styles-new.css">
   <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 <body class="dashboard-page">
-  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
-      <a href="index.html" class="logo">🌷 Girlhood Spectrum</a>
+      <a href="index.html" class="logo"><img src="Logo_girlhood_spectrum_png-removebg.png" alt="Girlhood Spectrum" class="nav-logo-img"> Girlhood Spectrum</a>
       <div class="nav-buttons">
-        <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
-        <button onclick="logout()" class="btn btn-ghost">Sair</button>
+        <div class="lang-switcher">
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+        <a href="dashboard.html" class="btn btn-ghost" data-i18n="nav.dashboard">Dashboard</a>
+        <button onclick="logout()" class="btn btn-ghost" data-i18n="nav.logout">Sair</button>
       </div>
     </div>
   </nav>
 
-  <!-- Main Content -->
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="dashboard-sidebar">
       <div class="sidebar-card">
-        <h3>Menu</h3>
+        <h3 data-i18n="sidebar.menu">Menu</h3>
         <ul class="sidebar-menu">
-          <li><a href="mood-tracker.html" class="active-link">❤️ Rastrear Humor</a></li>
-          <li><a href="group.html">👫 Meu Grupo</a></li>
-          <li><a href="alerts.html">📬 Alertas</a></li>
-          <li><a href="profile.html">👤 Perfil</a></li>
-          <li><a href="settings.html">⚙️ Definições</a></li>
+          <li><a href="mood-tracker.html" class="active-link" data-i18n="sidebar.trackMood">❤️ Rastrear Humor</a></li>
+          <li><a href="group.html"    data-i18n="sidebar.myGroup">👫 Meu Grupo</a></li>
+          <li><a href="alerts.html"   data-i18n="sidebar.alerts">📬 Alertas</a></li>
+          <li><a href="profile.html"  data-i18n="sidebar.profile">👤 Perfil</a></li>
+          <li><a href="settings.html" data-i18n="sidebar.settings">⚙️ Definições</a></li>
         </ul>
       </div>
-
-      <!-- Mood Summary Card -->
       <div class="sidebar-card highlight">
-        <p class="stat-label">Total de Registos</p>
+        <p class="stat-label" data-i18n="tracker.totalEntries">Total de Registos</p>
         <p class="stat-value" id="totalEntries">0</p>
-        <p class="stat-label" id="streakLabel">Série: 0 dias</p>
+        <p class="stat-label" id="streakLabel" data-i18n="sidebar.streak">Série: 0 dias</p>
       </div>
-
-      <!-- Mood Distribution -->
       <div class="sidebar-card">
-        <h3>Distribuição</h3>
+        <h3 data-i18n="tracker.distribution">Distribuição</h3>
         <div class="mood-distribution" id="moodDistribution">
-          <p style="color: var(--text-light); font-size: 0.9rem;">Sem dados ainda...</p>
+          <p style="color: var(--text-light); font-size: 0.9rem;" data-i18n="tracker.noData">Sem dados ainda...</p>
         </div>
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="dashboard-content">
-
-      <!-- Page Header -->
       <section class="tracker-page-header">
         <div class="tracker-header-left">
-          <h1>📊 Rastrear Humor</h1>
-          <p>Visualiza a evolução dos teus sentimentos ao longo do tempo</p>
+          <h1 data-i18n="tracker.title">📊 Rastrear Humor</h1>
+          <p  data-i18n="tracker.subtitle">Visualiza a evolução dos teus sentimentos ao longo do tempo</p>
         </div>
       </section>
 
-      <!-- Time Period Selector -->
       <section class="content-section">
         <div class="period-selector">
-          <button class="period-btn active" data-period="7" id="period-7">1 Semana</button>
-          <button class="period-btn" data-period="30" id="period-30">1 Mês</button>
-          <button class="period-btn" data-period="90" id="period-90">3 Meses</button>
-          <button class="period-btn" data-period="180" id="period-180">6 Meses</button>
+          <button class="period-btn active" data-period="7"   data-i18n="tracker.week">1 Semana</button>
+          <button class="period-btn"        data-period="30"  data-i18n="tracker.month">1 Mês</button>
+          <button class="period-btn"        data-period="90"  data-i18n="tracker.3months">3 Meses</button>
+          <button class="period-btn"        data-period="180" data-i18n="tracker.6months">6 Meses</button>
         </div>
-
-        <!-- Chart Container -->
         <div class="chart-wrapper">
           <canvas id="moodChart"></canvas>
         </div>
-
-        <!-- Empty State -->
         <div class="chart-empty-state" id="chartEmptyState" style="display: none;">
           <span class="empty-icon">📝</span>
-          <h3>Ainda sem registos</h3>
-          <p>Começa a registar o teu humor no dashboard para veres os resultados aqui.</p>
-          <a href="dashboard.html" class="btn btn-primary">Ir para o Dashboard</a>
+          <h3 data-i18n="tracker.emptyTitle">Ainda sem registos</h3>
+          <p  data-i18n="tracker.emptyDesc">Começa a registar o teu humor no dashboard para veres os resultados aqui.</p>
+          <a href="dashboard.html" class="btn btn-primary" data-i18n="tracker.emptyBtn">Ir para o Dashboard</a>
         </div>
       </section>
 
-      <!-- Mood History List -->
       <section class="content-section">
         <div class="history-header">
-          <h2>📋 Histórico de Registos</h2>
+          <h2 data-i18n="tracker.historyTitle">📋 Histórico de Registos</h2>
           <span class="history-count" id="historyCount">0 registos</span>
         </div>
         <div class="mood-history-list" id="moodHistoryList">
-          <p style="color: var(--text-light); text-align: center; padding: 2rem;">Sem registos para mostrar...</p>
+          <p style="color: var(--text-light); text-align: center; padding: 2rem;" data-i18n="tracker.noRecords">Sem registos para mostrar...</p>
         </div>
       </section>
 
-      <!-- Average Mood Card -->
       <section class="content-section">
-        <h2>📈 Resumo do Período</h2>
+        <h2 data-i18n="tracker.summaryTitle">📈 Resumo do Período</h2>
         <div class="summary-grid" id="summaryGrid">
           <div class="summary-card">
             <span class="summary-icon">😊</span>
             <div class="summary-info">
               <p class="summary-value" id="avgIntensity">--</p>
-              <p class="summary-label">Intensidade Média</p>
+              <p class="summary-label" data-i18n="tracker.avgIntensity">Intensidade Média</p>
             </div>
           </div>
           <div class="summary-card">
             <span class="summary-icon">🏆</span>
             <div class="summary-info">
               <p class="summary-value" id="mostFrequentMood">--</p>
-              <p class="summary-label">Humor Mais Frequente</p>
+              <p class="summary-label" data-i18n="tracker.mostFrequent">Humor Mais Frequente</p>
             </div>
           </div>
           <div class="summary-card">
             <span class="summary-icon">📊</span>
             <div class="summary-info">
               <p class="summary-value" id="totalRegistrations">0</p>
-              <p class="summary-label">Registos no Período</p>
+              <p class="summary-label" data-i18n="tracker.periodRecords">Registos no Período</p>
             </div>
           </div>
           <div class="summary-card">
             <span class="summary-icon">🔥</span>
             <div class="summary-info">
               <p class="summary-value" id="highestIntensity">--</p>
-              <p class="summary-label">Intensidade Máxima</p>
+              <p class="summary-label" data-i18n="tracker.maxIntensity">Intensidade Máxima</p>
             </div>
           </div>
         </div>
       </section>
-
     </main>
   </div>
 
+  <script src="lang.js"></script>
   <script src="auth.js"></script>
   <script src="mood-tracker.js"></script>
 </body>

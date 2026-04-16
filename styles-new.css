@@ -1728,6 +1728,59 @@ p {
 }
 
 /* ============================================
+   LANGUAGE SWITCHER
+   ============================================ */
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  background: rgba(168, 85, 247, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 2rem;
+  padding: 0.2rem 0.35rem;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  letter-spacing: 0.04em;
+}
+
+.lang-btn:hover {
+  color: var(--primary);
+}
+
+.lang-btn.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+[data-theme="dark"] .lang-switcher {
+  background: rgba(184, 122, 252, 0.1);
+  border-color: rgba(184, 122, 252, 0.25);
+}
+
+/* ============================================
+   NAV LOGO IMAGE
+   ============================================ */
+
+.nav-logo-img {
+  height: 36px;
+  width: 36px;
+  object-fit: contain;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+/* ============================================
    FEAR ALERT BANNER (dashboard)
    ============================================ */
 

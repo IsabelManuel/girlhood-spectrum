@@ -8,50 +8,49 @@
   <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
 <body class="dashboard-page">
-  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
-      <a href="index.html" class="logo">🌷 Girlhood Spectrum</a>
+      <a href="index.html" class="logo"><img src="Logo_girlhood_spectrum_png-removebg.png" alt="Girlhood Spectrum" class="nav-logo-img"> Girlhood Spectrum</a>
       <div class="nav-buttons">
-<button onclick="logout()" class="btn btn-ghost">Sair</button>
+        <div class="lang-switcher">
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+        <button onclick="logout()" class="btn btn-ghost" data-i18n="nav.logout">Sair</button>
       </div>
     </div>
   </nav>
 
-  <!-- Main Content -->
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="dashboard-sidebar">
       <div class="sidebar-card">
-        <h3>Menu</h3>
+        <h3 data-i18n="sidebar.menu">Menu</h3>
         <ul class="sidebar-menu">
-          <li><a href="mood-tracker.html">❤️ Rastrear Humor</a></li>
-          <li><a href="group.html">👫 Meu Grupo</a></li>
-          <li><a href="alerts.html">📬 Alertas</a></li>
-          <li><a href="profile.html">👤 Perfil</a></li>
-          <li><a href="settings.html">⚙️ Definições</a></li>
+          <li><a href="mood-tracker.html" data-i18n="sidebar.trackMood">❤️ Rastrear Humor</a></li>
+          <li><a href="group.html"        data-i18n="sidebar.myGroup">👫 Meu Grupo</a></li>
+          <li><a href="alerts.html"       data-i18n="sidebar.alerts">📬 Alertas</a></li>
+          <li><a href="profile.html"      data-i18n="sidebar.profile">👤 Perfil</a></li>
+          <li><a href="settings.html"     data-i18n="sidebar.settings">⚙️ Definições</a></li>
         </ul>
       </div>
-
       <div class="sidebar-card highlight">
-        <p class="stat-label">Pontos Totais</p>
+        <p class="stat-label" data-i18n="sidebar.totalPoints">Pontos Totais</p>
         <p class="stat-value" id="totalPoints">0</p>
-        <p class="stat-label">Série: 0 dias</p>
+        <p class="stat-label" data-i18n="sidebar.streak">Série: 0 dias</p>
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="dashboard-content">
 
       <!-- Fear Alert Banner -->
       <div class="fear-alert-banner" id="fearAlertBanner" style="display: none;">
         <span class="fear-alert-banner__icon">😨</span>
         <div class="fear-alert-banner__body">
-          <strong class="fear-alert-banner__title">Alerta Urgente</strong>
+          <strong class="fear-alert-banner__title" data-i18n="dash.fearTitle">Alerta Urgente</strong>
           <span class="fear-alert-banner__text" id="fearAlertText"></span>
         </div>
         <div class="fear-alert-banner__actions">
-          <a href="alerts.html" class="btn btn-small btn-primary">Ver alertas</a>
+          <a href="alerts.html" class="btn btn-small btn-primary" data-i18n="dash.fearViewBtn">Ver alertas</a>
           <button onclick="dismissFearAlerts()" class="btn btn-small btn-ghost fear-alert-banner__dismiss">✕</button>
         </div>
       </div>
@@ -59,8 +58,8 @@
       <!-- Welcome Header -->
       <section class="welcome-header">
         <div class="welcome-text">
-          <h1>Olá, <span class="gradient-text" id="welcomeName">amiga</span> 👋</h1>
-          <p>Como te sentes hoje? Partilha o teu sentimento com o teu grupo.</p>
+          <h1><span data-i18n="dash.hello">Olá,</span> <span class="gradient-text" id="welcomeName">amiga</span> 👋</h1>
+          <p data-i18n="dash.subtitle">Como te sentes hoje? Partilha o teu sentimento com o teu grupo.</p>
         </div>
         <div class="welcome-date" id="currentDate"></div>
       </section>
@@ -68,35 +67,35 @@
       <!-- Mood Tracker -->
       <section id="mood-section" class="content-section mood-section-enhanced">
         <div class="mood-section-header">
-          <h2>Regista o teu sentimento</h2>
-          <p class="mood-section-subtitle">Escolhe a emoção que melhor descreve o teu momento</p>
+          <h2 data-i18n="dash.moodTitle">Regista o teu sentimento</h2>
+          <p class="mood-section-subtitle" data-i18n="dash.moodSubtitle">Escolhe a emoção que melhor descreve o teu momento</p>
         </div>
 
         <div class="mood-tracker">
           <div class="mood-buttons">
             <div class="mood-option" data-color="happy">
-              <button class="mood-btn mood-btn-happy" data-mood="happy" title="Feliz" tabindex="0">😊</button>
-              <span class="mood-label">Feliz</span>
+              <button class="mood-btn mood-btn-happy" data-mood="happy" tabindex="0">😊</button>
+              <span class="mood-label" data-i18n="mood.happy">Feliz</span>
             </div>
             <div class="mood-option" data-color="neutral">
-              <button class="mood-btn mood-btn-neutral" data-mood="neutral" title="Neutro" tabindex="0">😐</button>
-              <span class="mood-label">Neutro</span>
+              <button class="mood-btn mood-btn-neutral" data-mood="neutral" tabindex="0">😐</button>
+              <span class="mood-label" data-i18n="mood.neutral">Neutro</span>
             </div>
             <div class="mood-option" data-color="sad">
-              <button class="mood-btn mood-btn-sad" data-mood="sad" title="Triste" tabindex="0">😢</button>
-              <span class="mood-label">Triste</span>
+              <button class="mood-btn mood-btn-sad" data-mood="sad" tabindex="0">😢</button>
+              <span class="mood-label" data-i18n="mood.sad">Triste</span>
             </div>
             <div class="mood-option" data-color="anxious">
-              <button class="mood-btn mood-btn-anxious" data-mood="anxious" title="Ansioso" tabindex="0">😰</button>
-              <span class="mood-label">Ansioso</span>
+              <button class="mood-btn mood-btn-anxious" data-mood="anxious" tabindex="0">😰</button>
+              <span class="mood-label" data-i18n="mood.anxious">Ansioso</span>
             </div>
             <div class="mood-option" data-color="angry">
-              <button class="mood-btn mood-btn-angry" data-mood="angry" title="Irritado" tabindex="0">😠</button>
-              <span class="mood-label">Irritado</span>
+              <button class="mood-btn mood-btn-angry" data-mood="angry" tabindex="0">😠</button>
+              <span class="mood-label" data-i18n="mood.angry">Irritado</span>
             </div>
             <div class="mood-option" data-color="fear">
-              <button class="mood-btn mood-btn-fear" data-mood="fear" title="Medo" tabindex="0">😨</button>
-              <span class="mood-label">Medo</span>
+              <button class="mood-btn mood-btn-fear" data-mood="fear" tabindex="0">😨</button>
+              <span class="mood-label" data-i18n="mood.fear">Medo</span>
             </div>
           </div>
 
@@ -105,7 +104,7 @@
             <div class="activities-header">
               <span class="activities-icon" id="activitiesIcon"></span>
               <div>
-                <h4 id="activitiesTitle">Atividades sugeridas</h4>
+                <h4 id="activitiesTitle" data-i18n="dash.actTitle">O que queres fazer?</h4>
                 <p id="activitiesSubtitle"></p>
               </div>
             </div>
@@ -116,32 +115,25 @@
             <div class="mood-form-inner">
               <div class="form-group">
                 <label class="form-label-styled">
-                  Intensidade: <span id="intensityValue" class="intensity-badge">5</span>/10
+                  <span data-i18n="dash.intensity">Intensidade:</span> <span id="intensityValue" class="intensity-badge">5</span>/10
                 </label>
                 <div class="slider-container">
-                  <span class="slider-label-min">Leve</span>
+                  <span class="slider-label-min" data-i18n="dash.intensityMin">Leve</span>
                   <input type="range" id="intensity" min="1" max="10" value="5" class="slider">
-                  <span class="slider-label-max">Forte</span>
+                  <span class="slider-label-max" data-i18n="dash.intensityMax">Forte</span>
                 </div>
               </div>
-
               <div class="form-group">
-                <label for="notes" class="form-label-styled">Notas (opcional)</label>
-                <textarea 
-                  id="notes" 
-                  placeholder="Porque te sentes assim? Escreve aqui os teus pensamentos..."
-                  class="textarea"
-                ></textarea>
+                <label for="notes" class="form-label-styled" data-i18n="dash.notesLabel">Notas (opcional)</label>
+                <textarea id="notes" placeholder="Porque te sentes assim? Escreve aqui os teus pensamentos..." data-i18n-placeholder="dash.notesPH" class="textarea"></textarea>
               </div>
-
               <button onclick="submitMood()" class="btn btn-primary btn-block btn-submit-mood">
-                <span class="btn-icon">✨</span> Guardar Sentimento
+                <span data-i18n="dash.saveBtn">✨ Guardar Sentimento</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Success Toast -->
         <div class="mood-success-toast" id="moodSuccessToast">
           <span class="toast-icon">✅</span>
           <span class="toast-text">Sentimento guardado com sucesso!</span>
@@ -150,20 +142,21 @@
 
       <!-- Last Mood -->
       <section class="content-section last-mood-section" id="lastMoodSection" style="display: none;">
-        <h3>Último registo</h3>
+        <h3 data-i18n="dash.lastRecord">Último registo</h3>
         <div class="last-mood-card" id="lastMoodCard">
-          <span class="last-mood-emoji" id="lastMoodEmoji"></span>
+          <span class="last-mood-emoji"     id="lastMoodEmoji"></span>
           <div class="last-mood-info">
-            <p class="last-mood-name" id="lastMoodName"></p>
-            <p class="last-mood-time" id="lastMoodTime"></p>
+            <p class="last-mood-name"       id="lastMoodName"></p>
+            <p class="last-mood-time"       id="lastMoodTime"></p>
           </div>
-          <div class="last-mood-intensity" id="lastMoodIntensity"></div>
+          <div class="last-mood-intensity"  id="lastMoodIntensity"></div>
         </div>
       </section>
 
     </main>
   </div>
 
+  <script src="lang.js"></script>
   <script src="auth.js"></script>
   <script src="alerts.js"></script>
   <script src="dashboard.js"></script>

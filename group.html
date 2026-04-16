@@ -10,11 +10,15 @@
 <body class="dashboard-page">
   <nav class="navbar">
     <div class="nav-container">
-      <a href="index.html" class="logo">🌷 Girlhood Spectrum</a>
+      <a href="index.html" class="logo"><img src="Logo_girlhood_spectrum_png-removebg.png" alt="Girlhood Spectrum" class="nav-logo-img"> Girlhood Spectrum</a>
       <div class="nav-buttons">
-        <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
-        <a href="profile.html" class="btn btn-ghost">Perfil</a>
-        <button onclick="logout()" class="btn btn-ghost">Sair</button>
+        <div class="lang-switcher">
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+        <a href="dashboard.html" class="btn btn-ghost" data-i18n="nav.dashboard">Dashboard</a>
+        <a href="profile.html"   class="btn btn-ghost" data-i18n="nav.profile">Perfil</a>
+        <button onclick="logout()" class="btn btn-ghost" data-i18n="nav.logout">Sair</button>
       </div>
     </div>
   </nav>
@@ -22,90 +26,84 @@
   <div class="dashboard-container">
     <aside class="dashboard-sidebar">
       <div class="sidebar-card">
-        <h3>Menu</h3>
+        <h3 data-i18n="sidebar.menu">Menu</h3>
         <ul class="sidebar-menu">
-          <li><a href="dashboard.html">📊 Dashboard</a></li>
-          <li><a href="group.html">👫 Meu Grupo</a></li>
-          <li><a href="alerts.html">📬 Alertas</a></li>
-          <li><a href="profile.html">👤 Perfil</a></li>
-          <li><a href="settings.html">⚙️ Definições</a></li>
+          <li><a href="dashboard.html" data-i18n="nav.dashboard">📊 Dashboard</a></li>
+          <li><a href="group.html"     data-i18n="sidebar.myGroup">👫 Meu Grupo</a></li>
+          <li><a href="alerts.html"    data-i18n="sidebar.alerts">📬 Alertas</a></li>
+          <li><a href="profile.html"   data-i18n="sidebar.profile">👤 Perfil</a></li>
+          <li><a href="settings.html"  data-i18n="sidebar.settings">⚙️ Definições</a></li>
         </ul>
       </div>
     </aside>
 
     <main class="dashboard-content">
       <section class="content-section">
-        <h2>Gestão de Grupos 👫</h2>
-        
+        <h2 data-i18n="group.title">Gestão de Grupos 👫</h2>
+
         <div id="tabButtons" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-          <button id="viewBtn" class="btn btn-primary" onclick="showTab('view')" style="display: none;">Ver Meu Grupo</button>
-          <button id="createBtn" class="btn btn-secondary" onclick="showTab('create')">Criar Grupo</button>
-          <button id="joinBtn" class="btn btn-secondary" onclick="showTab('join')">Juntar-se a Grupo</button>
+          <button id="viewBtn"   class="btn btn-primary"   onclick="showTab('view')"   style="display: none;" data-i18n="group.viewBtn">Ver Meu Grupo</button>
+          <button id="createBtn" class="btn btn-secondary" onclick="showTab('create')" data-i18n="group.createBtn">Criar Grupo</button>
+          <button id="joinBtn"   class="btn btn-secondary" onclick="showTab('join')"   data-i18n="group.joinBtn">Juntar-se a Grupo</button>
         </div>
 
-        <!-- View Group Tab -->
+        <!-- View Group -->
         <div id="viewTab" class="content-section" style="display: none;">
           <h3 id="groupTitle">📛 Nome do Grupo</h3>
-          
           <div style="margin: 2rem 0;">
-            <h4>Código do Grupo (partilha com amigas)</h4>
+            <h4 data-i18n="group.codeLabel">Código do Grupo (partilha com amigas)</h4>
             <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
               <input type="text" id="groupCodeDisplay" readonly style="flex: 1; min-width: 200px; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); font-family: monospace; font-size: 1.25rem; font-weight: 600;">
-              <button class="btn btn-secondary" onclick="copyGroupCode()">Copiar Código</button>
+              <button class="btn btn-secondary" onclick="copyGroupCode()" data-i18n="group.copyBtn">Copiar Código</button>
             </div>
           </div>
-
           <div style="margin-top: 2rem;">
-            <h4>Membros do Grupo (<span id="memberCount">0</span>)</h4>
-            <div id="membersList" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
-            </div>
+            <h4><span data-i18n="group.membersLabel">Membros do Grupo</span> (<span id="memberCount">0</span>)</h4>
+            <div id="membersList" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;"></div>
           </div>
-
-          <div style="margin-top: 2rem; padding: 1rem; background: rgba(168, 85, 247, 0.1); border-radius: 0.75rem; border: 1px solid var(--primary);">
-            <p style="font-size: 0.875rem; color: var(--text-secondary);">💡 Partilha o código acima com as amigas para as adicionar ao grupo!</p>
+          <div style="margin-top: 2rem; padding: 1rem; background: rgba(168,85,247,0.1); border-radius: 0.75rem; border: 1px solid var(--primary);">
+            <p style="font-size: 0.875rem; color: var(--text-secondary);" data-i18n="group.tipMsg">💡 Partilha o código acima com as amigas para as adicionar ao grupo!</p>
           </div>
         </div>
 
-        <!-- Create Group Tab -->
+        <!-- Create Group -->
         <div id="createTab" class="content-section" style="display: none;">
           <form onsubmit="createGroup(event)">
             <div class="form-group">
-              <label for="groupName">Nome do Grupo</label>
-              <input type="text" id="groupName" placeholder="ex: Amigas da Turma 10°A" required>
+              <label for="groupName" data-i18n="group.nameLabel">Nome do Grupo</label>
+              <input type="text" id="groupName" placeholder="ex: Amigas da Turma 10°A" data-i18n-placeholder="group.namePH" required>
             </div>
-            
             <div class="form-group">
-              <label for="groupDesc">Descrição (opcional)</label>
-              <textarea id="groupDesc" placeholder="Descreve o teu grupo..." style="padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.75rem; background: rgba(255,255,255,0.5); min-height: 100px; font-family: inherit;"></textarea>
+              <label for="groupDesc" data-i18n="group.descLabel">Descrição (opcional)</label>
+              <textarea id="groupDesc" placeholder="Descreve o teu grupo..." data-i18n-placeholder="group.descPH" style="padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.75rem; background: rgba(255,255,255,0.5); min-height: 100px; font-family: inherit;"></textarea>
             </div>
-            
-            <button type="submit" class="btn btn-primary btn-block">Criar Grupo ✨</button>
+            <button type="submit" class="btn btn-primary btn-block" data-i18n="group.createSubmit">Criar Grupo ✨</button>
           </form>
         </div>
 
-        <!-- Join Group Tab -->
+        <!-- Join Group -->
         <div id="joinTab" class="content-section" style="display: none;">
           <form onsubmit="joinGroup(event)">
             <div class="form-group">
-              <label for="groupCode">Código do Grupo</label>
-              <input type="text" id="groupCode" placeholder="ex: ABC123" maxlength="6" style="font-family: monospace; font-size: 1.25rem; text-align: center; text-transform: uppercase;" required>
-              <p style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.5rem;">Pede a uma amiga o código do grupo dela</p>
+              <label for="groupCode" data-i18n="group.codeLabel2">Código do Grupo</label>
+              <input type="text" id="groupCode" placeholder="ex: ABC123" data-i18n-placeholder="group.codePH" maxlength="6" style="font-family: monospace; font-size: 1.25rem; text-align: center; text-transform: uppercase;" required>
+              <p style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.5rem;" data-i18n="group.codeHint">Pede a uma amiga o código do grupo dela</p>
             </div>
-            
-            <button type="submit" class="btn btn-primary btn-block">Juntar-se 👫</button>
+            <button type="submit" class="btn btn-primary btn-block" data-i18n="group.joinSubmit">Juntar-se 👫</button>
           </form>
         </div>
 
-        <!-- No Group Message -->
+        <!-- No Group -->
         <div id="noGroupMessage" class="content-section" style="display: none; text-align: center; padding: 3rem;">
           <p style="font-size: 2rem; margin-bottom: 1rem;">👫</p>
-          <h3>Ainda não tens grupo</h3>
-          <p style="color: var(--text-secondary); margin: 1rem 0;">Cria um novo grupo ou pede o código a uma amiga para te juntares!</p>
+          <h3 data-i18n="group.noGroup">Ainda não tens grupo</h3>
+          <p style="color: var(--text-secondary); margin: 1rem 0;" data-i18n="group.noGroupDesc">Cria um novo grupo ou pede o código a uma amiga para te juntares!</p>
         </div>
       </section>
     </main>
   </div>
 
+  <script src="lang.js"></script>
   <script src="auth.js"></script>
   <script src="group.js"></script>
 </body>

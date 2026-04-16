@@ -10,11 +10,15 @@
 <body class="dashboard-page">
   <nav class="navbar">
     <div class="nav-container">
-      <a href="index.html" class="logo">🌷 Girlhood Spectrum</a>
+      <a href="index.html" class="logo"><img src="Logo_girlhood_spectrum_png-removebg.png" alt="Girlhood Spectrum" class="nav-logo-img"> Girlhood Spectrum</a>
       <div class="nav-buttons">
-        <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
-        <a href="profile.html" class="btn btn-ghost">Perfil</a>
-        <button onclick="logout()" class="btn btn-ghost">Sair</button>
+        <div class="lang-switcher">
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+        <a href="dashboard.html" class="btn btn-ghost" data-i18n="nav.dashboard">Dashboard</a>
+        <a href="profile.html"   class="btn btn-ghost" data-i18n="nav.profile">Perfil</a>
+        <button onclick="logout()" class="btn btn-ghost" data-i18n="nav.logout">Sair</button>
       </div>
     </div>
   </nav>
@@ -22,35 +26,41 @@
   <div class="dashboard-container">
     <aside class="dashboard-sidebar">
       <div class="sidebar-card">
-        <h3>Menu</h3>
+        <h3 data-i18n="sidebar.menu">Menu</h3>
         <ul class="sidebar-menu">
-          <li><a href="dashboard.html">📊 Dashboard</a></li>
-          <li><a href="group.html">👫 Meu Grupo</a></li>
-          <li><a href="alerts.html">📬 Alertas</a></li>
-          <li><a href="profile.html">👤 Perfil</a></li>
-          <li><a href="settings.html">⚙️ Definições</a></li>
+          <li><a href="dashboard.html" data-i18n="nav.dashboard">📊 Dashboard</a></li>
+          <li><a href="group.html"     data-i18n="sidebar.myGroup">👫 Meu Grupo</a></li>
+          <li><a href="alerts.html"    data-i18n="sidebar.alerts">📬 Alertas</a></li>
+          <li><a href="profile.html"   data-i18n="sidebar.profile">👤 Perfil</a></li>
+          <li><a href="settings.html"  data-i18n="sidebar.settings">⚙️ Definições</a></li>
         </ul>
       </div>
     </aside>
 
     <main class="dashboard-content">
+      <!-- Language -->
+      <section class="content-section">
+        <h2 data-i18n="settings.language">🌐 Idioma</h2>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button class="btn btn-secondary theme-btn" style="flex:1;" onclick="setLang('pt')">🇵🇹 Português</button>
+          <button class="btn btn-secondary theme-btn" style="flex:1;" onclick="setLang('en')">🇬🇧 English</button>
+        </div>
+      </section>
+
       <!-- Notifications -->
       <section class="content-section">
-        <h2>🔔 Notificações</h2>
-        
+        <h2 data-i18n="settings.notifications">🔔 Notificações</h2>
         <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 0.75rem;">
-            <label style="font-weight: 600; cursor: pointer;">Alertas de Amigas</label>
+            <label style="font-weight: 600; cursor: pointer;" data-i18n="settings.friendAlerts">Alertas de Amigas</label>
             <input type="checkbox" checked style="width: 20px; height: 20px; cursor: pointer;">
           </div>
-          
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 0.75rem;">
-            <label style="font-weight: 600; cursor: pointer;">Desafios Diários</label>
+            <label style="font-weight: 600; cursor: pointer;" data-i18n="settings.dailyChallenges">Desafios Diários</label>
             <input type="checkbox" checked style="width: 20px; height: 20px; cursor: pointer;">
           </div>
-          
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 0.75rem;">
-            <label style="font-weight: 600; cursor: pointer;">Atualizações de Grupo</label>
+            <label style="font-weight: 600; cursor: pointer;" data-i18n="settings.groupUpdates">Atualizações de Grupo</label>
             <input type="checkbox" checked style="width: 20px; height: 20px; cursor: pointer;">
           </div>
         </div>
@@ -58,51 +68,47 @@
 
       <!-- Privacy -->
       <section class="content-section">
-        <h2>🔒 Privacidade</h2>
-        
+        <h2 data-i18n="settings.privacy">🔒 Privacidade</h2>
         <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 0.75rem;">
-            <label style="font-weight: 600; cursor: pointer;">Perfil Privado</label>
+            <label style="font-weight: 600; cursor: pointer;" data-i18n="settings.privateProfile">Perfil Privado</label>
             <input type="checkbox" checked style="width: 20px; height: 20px; cursor: pointer;">
           </div>
-          
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 0.75rem;">
-            <label style="font-weight: 600; cursor: pointer;">Mostrar Status Online</label>
+            <label style="font-weight: 600; cursor: pointer;" data-i18n="settings.onlineStatus">Mostrar Status Online</label>
             <input type="checkbox" checked style="width: 20px; height: 20px; cursor: pointer;">
           </div>
-          
-          <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; border-radius: 0.75rem; padding: 1rem; margin-top: 0.5rem;">
-            <p style="font-size: 0.875rem; color: #1e40af;">ℹ️ O teu estado emocional nunca é partilhado fora do grupo.</p>
+          <div style="background: rgba(59,130,246,0.1); border: 1px solid #3b82f6; border-radius: 0.75rem; padding: 1rem; margin-top: 0.5rem;">
+            <p style="font-size: 0.875rem; color: #1e40af;" data-i18n="settings.privacyNote">ℹ️ O teu estado emocional nunca é partilhado fora do grupo.</p>
           </div>
         </div>
       </section>
 
       <!-- Appearance -->
       <section class="content-section">
-        <h2>🌙 Aparência</h2>
-        
+        <h2 data-i18n="settings.appearance">🌙 Aparência</h2>
         <div class="theme-selector" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-          <button class="btn btn-secondary theme-btn active" id="themeLightBtn" onclick="setTheme('light')" style="flex: 1;">☀️ Claro</button>
-          <button class="btn btn-secondary theme-btn" id="themeDarkBtn" onclick="setTheme('dark')" style="flex: 1;">🌙 Escuro</button>
+          <button class="btn btn-secondary theme-btn active" id="themeLightBtn" onclick="setTheme('light')" style="flex: 1;" data-i18n="settings.lightMode">☀️ Claro</button>
+          <button class="btn btn-secondary theme-btn"        id="themeDarkBtn"  onclick="setTheme('dark')"  style="flex: 1;" data-i18n="settings.darkMode">🌙 Escuro</button>
         </div>
       </section>
 
       <!-- Support -->
       <section class="content-section" style="text-align: center;">
-        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Precisa de ajuda? Contacta-nos.</p>
-        <button class="btn btn-ghost">📧 Enviar Email de Suporte</button>
+        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;" data-i18n="settings.supportText">Precisa de ajuda? Contacta-nos.</p>
+        <button class="btn btn-ghost" data-i18n="settings.supportBtn">📧 Enviar Email de Suporte</button>
       </section>
 
       <!-- Danger Zone -->
-      <section class="content-section" style="border: 2px solid var(--danger); background: rgba(239, 68, 68, 0.05);">
-        <h2 style="color: var(--danger);">Zona de Perigo ⚠️</h2>
-        
-        <button class="btn btn-danger btn-block" style="margin-top: 1.5rem; background: var(--danger); color: white;">❌ Eliminar Conta</button>
-        <p style="font-size: 0.75rem; color: var(--danger); margin-top: 0.75rem;">Esta ação não pode ser desfeita.</p>
+      <section class="content-section" style="border: 2px solid var(--danger); background: rgba(239,68,68,0.05);">
+        <h2 style="color: var(--danger);" data-i18n="settings.dangerZone">Zona de Perigo ⚠️</h2>
+        <button class="btn btn-danger btn-block" style="margin-top: 1.5rem; background: var(--danger); color: white;" data-i18n="settings.deleteAccount">❌ Eliminar Conta</button>
+        <p style="font-size: 0.75rem; color: var(--danger); margin-top: 0.75rem;" data-i18n="settings.deleteWarning">Esta ação não pode ser desfeita.</p>
       </section>
     </main>
   </div>
 
+  <script src="lang.js"></script>
   <script src="auth.js"></script>
   <script src="settings.js"></script>
 </body>

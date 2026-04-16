@@ -1,0 +1,27 @@
+# ============================================
+# GIRLHOOD SPECTRUM - HOSTINGER CONFIG
+# ============================================
+
+# Default page
+DirectoryIndex index.html
+
+# PHP session security
+php_value session.cookie_httponly 1
+php_value session.use_strict_mode 1
+php_value session.cookie_samesite Lax
+
+# Hide PHP errors from users (log internally)
+php_flag display_errors off
+php_flag log_errors on
+
+# Security headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Block direct access to config.php
+<Files "config.php">
+  Order allow,deny
+  Deny from all
+</Files>
