@@ -12,7 +12,7 @@ if (!$groupId) {
 
 $stmt = $pdo->prepare('
     SELECT m.id, m.mood, m.intensity, m.notes, m.created_at AS timestamp,
-           u.name AS member_name, u.email AS member_email
+           u.id AS member_id, u.name AS member_name, u.email AS member_email
     FROM moods m
     JOIN users u          ON m.user_id  = u.id
     JOIN group_members gm ON u.id       = gm.user_id

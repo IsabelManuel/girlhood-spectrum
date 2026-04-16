@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $stmt = $pdo->prepare('
-        SELECT fa.id, fa.created_at AS timestamp,
+        SELECT fa.id, fa.sender_id AS sender_user_id, fa.created_at AS timestamp,
                u.name AS sender_name, u.email AS sender_email,
                IF(far.id IS NULL, 1, 0) AS is_unread
         FROM fear_alerts fa

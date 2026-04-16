@@ -2,40 +2,53 @@
 // GROUP MANAGEMENT FUNCTIONS
 // ============================================
 
+let selectedGroupId = null;
+let cachedGroups    = [];
+let cachedCreated   = 0;
+
 // Update UI based on group membership
 async function updateGroupUI() {
-  const result = await apiGet('api/groups.php');
-  const group  = result.group;
+  const result  = await apiGet('api/groups.php');
+  cachedGroups  = result.groups  || [];
+  cachedCreated = result.created_count || 0;
 
   const viewBtn        = document.getElementById('viewBtn');
   const createBtn      = document.getElementById('createBtn');
   const joinBtn        = document.getElementById('joinBtn');
-  const viewTab        = document.getElementById('viewTab');
-  const createTab      = document.getElementById('createTab');
-  const joinTab        = document.getElementById('joinTab');
   const noGroupMessage = document.getElementById('noGroupMessage');
 
-  if (group) {
-    if (viewBtn)        viewBtn.style.display   = 'inline-block';
-    if (createBtn)      createBtn.style.display = 'none';
-    if (viewTab)        viewTab.style.display   = 'block';
-    if (createTab)      createTab.style.display = 'none';
-    if (joinTab)        joinTab.style.display   = 'none';
-    if (noGroupMessage) noGroupMessage.style.display = 'none';
-
-    showTab('view');
-    populateGroupView(group, result.members || []);
-  } else {
-    if (viewBtn)        viewBtn.style.display   = 'none';
-    if (createBtn)      createBtn.style.display = 'inline-block';
-    if (joinBtn)        joinBtn.style.display   = 'inline-block';
-    if (viewTab)        viewTab.style.display   = 'none';
-    if (createTab)      createTab.style.display = 'block';
-    if (joinTab)        joinTab.style.display   = 'none';
+  if (cachedGroups.length === 0) {
+    if (viewBtn)        viewBtn.style.display        = 'none';
+    if (createBtn)      createBtn.style.display      = 'inline-block';
+    if (joinBtn)        joinBtn.style.display        = 'inline-block';
     if (noGroupMessage) noGroupMessage.style.display = 'block';
-
     showTab('create');
+    return;
   }
+
+  // Has at least 1 group
+  if (viewBtn)   viewBtn.style.display   = 'inline-block';
+  // Show "Criar Grupo" only if user created fewer than 2
+  if (createBtn) createBtn.style.display = cachedCreated < 2 ? 'inline-block' : 'none';
+  if (joinBtn)   joinBtn.style.display   = 'inline-block';
+  if (noGroupMessage) noGroupMessage.style.display = 'none';
+
+  // Keep previous selection or default to first group
+  const ids = cachedGroups.map(g => parseInt(g.id));
+  if (!selectedGroupId || !ids.includes(selectedGroupId)) {
+    selectedGroupId = ids[0];
+  }
+
+  const group = cachedGroups.find(g => parseInt(g.id) === selectedGroupId);
+  showTab('view');
+  populateGroupView(group, group.members || []);
+}
+
+// Switch to a different group
+function selectGroup(groupId) {
+  selectedGroupId = parseInt(groupId);
+  const group = cachedGroups.find(g => parseInt(g.id) === selectedGroupId);
+  if (group) populateGroupView(group, group.members || []);
 }
 
 // Populate group view
@@ -48,6 +61,29 @@ function populateGroupView(group, members) {
   if (titleEl) titleEl.textContent = `📛 ${group.name}`;
   if (codeEl)  codeEl.value        = group.code;
   if (countEl) countEl.textContent = members.length;
+
+  // Group selector (only shown when user has multiple groups)
+  const selectorEl = document.getElementById('groupSelector');
+  if (selectorEl) {
+    if (cachedGroups.length > 1) {
+      selectorEl.style.display = 'block';
+      selectorEl.innerHTML = `
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          ${cachedGroups.map(g => `
+            <button
+              class="btn ${parseInt(g.id) === selectedGroupId ? 'btn-primary' : 'btn-secondary'}"
+              onclick="selectGroup(${g.id})"
+              style="font-size:0.875rem;">
+              ${g.is_owner ? '👑' : '👤'} ${g.name}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    } else {
+      selectorEl.style.display = 'none';
+    }
+  }
+
   if (!listEl) return;
 
   const currentEmail = sessionStorage.getItem('userEmail');
@@ -84,12 +120,12 @@ function showTab(tabName) {
   if (target) target.style.display = 'block';
 }
 
-// Copy group code
+// Copy group code for the selected group
 async function copyGroupCode() {
-  const result = await apiGet('api/groups.php');
-  if (!result.group) { alert('❌ Sem grupo para copiar código!'); return; }
-  navigator.clipboard.writeText(result.group.code);
-  alert('✅ Código copiado: ' + result.group.code);
+  const group = cachedGroups.find(g => parseInt(g.id) === selectedGroupId);
+  if (!group) { alert('❌ Sem grupo para copiar código!'); return; }
+  navigator.clipboard.writeText(group.code);
+  alert('✅ Código copiado: ' + group.code);
 }
 
 // Create group
@@ -105,6 +141,7 @@ async function createGroup(e) {
     alert(`✅ Grupo "${name}" criado com sucesso!\n\nCódigo: ${result.group.code}\n\nPartilha este código com as tuas amigas!`);
     document.getElementById('groupName').value = '';
     if (document.getElementById('groupDesc')) document.getElementById('groupDesc').value = '';
+    selectedGroupId = result.group.id;
     await updateGroupUI();
   } else {
     alert('❌ ' + result.error);
@@ -121,6 +158,7 @@ async function joinGroup(e) {
   if (result.success) {
     alert(`✅ Juntou-se ao grupo "${result.group.name}" com sucesso! 👫`);
     document.getElementById('groupCode').value = '';
+    selectedGroupId = result.group.id;
     await updateGroupUI();
   } else {
     alert('❌ ' + result.error);

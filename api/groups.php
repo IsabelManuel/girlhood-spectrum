@@ -17,38 +17,47 @@ function generateUniqueCode(PDO $pdo): string {
     return $code;
 }
 
-function fetchUserGroup(PDO $pdo, int $userId): ?array {
-    $stmt = $pdo->prepare('
-        SELECT g.*
-        FROM groups_table g
-        JOIN group_members gm ON g.id = gm.group_id
-        WHERE gm.user_id = ?
-        LIMIT 1
-    ');
-    $stmt->execute([$userId]);
-    return $stmt->fetch() ?: null;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $group = fetchUserGroup($pdo, $userId);
-
-    if (!$group) {
-        echo json_encode(['success' => true, 'group' => null, 'members' => []]);
-        exit;
-    }
-
+function fetchGroupMembers(PDO $pdo, int $groupId): array {
     $stmt = $pdo->prepare('
         SELECT u.id, u.name, u.email, gm.joined_at,
                IF(g.creator_id = u.id, 1, 0) AS is_creator
         FROM group_members gm
-        JOIN users u          ON gm.user_id  = u.id
-        JOIN groups_table g   ON gm.group_id = g.id
+        JOIN users u        ON gm.user_id  = u.id
+        JOIN groups_table g ON gm.group_id = g.id
         WHERE gm.group_id = ?
     ');
-    $stmt->execute([$group['id']]);
-    $members = $stmt->fetchAll();
+    $stmt->execute([$groupId]);
+    return $stmt->fetchAll();
+}
 
-    echo json_encode(['success' => true, 'group' => $group, 'members' => $members]);
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Return ALL groups the user belongs to
+    $stmt = $pdo->prepare('
+        SELECT g.*, IF(g.creator_id = ?, 1, 0) AS is_owner
+        FROM groups_table g
+        JOIN group_members gm ON g.id = gm.group_id
+        WHERE gm.user_id = ?
+        ORDER BY gm.joined_at ASC
+    ');
+    $stmt->execute([$userId, $userId]);
+    $groups = $stmt->fetchAll();
+
+    foreach ($groups as &$g) {
+        $g['members']  = fetchGroupMembers($pdo, (int)$g['id']);
+        $g['is_owner'] = (int)$g['is_owner'];
+    }
+    unset($g);
+
+    $createdCount = count(array_filter($groups, fn($g) => $g['is_owner'] === 1));
+
+    echo json_encode([
+        'success'       => true,
+        'groups'        => $groups,
+        'created_count' => $createdCount,
+        // Backward-compat fields (first group)
+        'group'   => $groups[0] ?? null,
+        'members' => $groups[0]['members'] ?? []
+    ]);
 
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data   = getInput();
@@ -62,8 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo json_encode(['success' => false, 'error' => 'Nome do grupo obrigatório']);
             exit;
         }
-        if (fetchUserGroup($pdo, $userId)) {
-            echo json_encode(['success' => false, 'error' => 'Já fazes parte de um grupo']);
+
+        // Limit: max 2 created groups per user
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM groups_table WHERE creator_id = ?');
+        $stmt->execute([$userId]);
+        $createdCount = (int)$stmt->fetchColumn();
+
+        if ($createdCount >= 2) {
+            echo json_encode(['success' => false, 'error' => 'Já criaste o máximo de 2 grupos']);
             exit;
         }
 
@@ -85,10 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo json_encode(['success' => false, 'error' => 'Código obrigatório']);
             exit;
         }
-        if (fetchUserGroup($pdo, $userId)) {
-            echo json_encode(['success' => false, 'error' => 'Já fazes parte de um grupo. Sai para entrar neste.']);
-            exit;
-        }
 
         $stmt = $pdo->prepare('SELECT * FROM groups_table WHERE code = ?');
         $stmt->execute([$code]);
@@ -99,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             exit;
         }
 
-        // Check if already member
+        // Check if already a member of this specific group
         $stmt = $pdo->prepare('SELECT id FROM group_members WHERE group_id = ? AND user_id = ?');
         $stmt->execute([$group['id'], $userId]);
         if ($stmt->fetch()) {

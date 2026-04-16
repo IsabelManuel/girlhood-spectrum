@@ -32,6 +32,43 @@ function hexToRgb(hex) {
 }
 
 // ============================================
+// SUPPORT RECEIVED SECTION
+// ============================================
+
+async function renderSupportReceived() {
+  const container = document.getElementById('supportReceivedContainer');
+  if (!container) return;
+
+  const result = await apiGet('api/support.php');
+  if (!result.success) return;
+
+  const unread = result.notifications.filter(n => n.is_read === 0);
+  if (unread.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  // Mark as read
+  apiPost('api/support.php', { action: 'mark_read' });
+
+  container.style.display = 'block';
+  container.innerHTML = `
+    <div class="content-section" style="border: 2px solid #10b981; background: rgba(16,185,129,0.06);">
+      <h3 style="color: #10b981; margin-bottom: 1rem;">💚 Apoio Recebido</h3>
+      ${unread.map(n => `
+        <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem 0; border-bottom: 1px solid rgba(16,185,129,0.15);">
+          <span style="font-size:1.5rem;">❤️</span>
+          <div>
+            <p style="font-weight:600; margin:0;"><strong>${n.sender_name}</strong> enviou-te apoio</p>
+            <p style="font-size:0.8rem; color:var(--text-light); margin:0.2rem 0 0;">${formatTimeAgo(n.timestamp)}</p>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ============================================
 // FEAR ALERTS (urgent section at top)
 // ============================================
 
@@ -65,8 +102,8 @@ async function renderFearAlerts() {
               <span class="fear-alert-card__time">${formatTimeAgo(a.timestamp)}</span>
             </div>
             <div class="fear-alert-card__btns">
-              <button class="btn btn-small btn-secondary" onclick="sendMessage('${a.sender_email}')">💬 Chat</button>
-              <button class="btn btn-small btn-primary"   onclick="sendSupport('${a.sender_email}')">❤️ Apoio</button>
+              <button class="btn btn-small btn-primary" id="support-fear-${a.sender_user_id}"
+                onclick="sendSupport(${a.sender_user_id}, '${a.sender_name}', this)">❤️ Apoio</button>
             </div>
           </div>
         `).join('')}
@@ -83,8 +120,8 @@ async function renderAlerts() {
   const alertsContainer = document.getElementById('alertsContainer');
   if (!alertsContainer) return;
 
-  // Render fear alerts first
   await renderFearAlerts();
+  await renderSupportReceived();
 
   const emptyState = document.getElementById('emptyState');
   const result     = await apiGet('api/alerts.php');
@@ -105,7 +142,7 @@ async function renderAlerts() {
   alertsContainer.innerHTML = '';
 
   result.alerts.forEach(alert => {
-    const sentiment   = alertSentiments[alert.mood];
+    const sentiment = alertSentiments[alert.mood];
     if (!sentiment) return;
 
     const timeAgo     = formatTimeAgo(alert.timestamp);
@@ -131,8 +168,8 @@ async function renderAlerts() {
         ${alert.notes ? `<p style="font-size:.875rem;font-style:italic;color:var(--text-light);">📝 ${alert.notes}</p>` : ''}
       </div>
       <div style="display:flex;gap:.5rem;">
-        <button class="btn btn-small btn-secondary" onclick="sendMessage('${alert.member_email}')">💬 Chat</button>
-        <button class="btn btn-small btn-primary"   onclick="sendSupport('${alert.member_email}')">❤️ Apoio</button>
+        <button class="btn btn-small btn-primary" id="support-${alert.member_id}"
+          onclick="sendSupport(${alert.member_id}, '${alert.member_name}', this)">❤️ Apoio</button>
       </div>
     `;
     alertsContainer.appendChild(alertDiv);
@@ -140,15 +177,23 @@ async function renderAlerts() {
 }
 
 // ============================================
-// SUPPORT / MESSAGE
+// SEND SUPPORT
 // ============================================
 
-function sendSupport(email) {
-  alert(`❤️ Apoio enviado!\n\nEla vai receber uma notificação do teu apoio.`);
-}
+async function sendSupport(receiverId, memberName, btn) {
+  btn.disabled = true;
+  btn.textContent = '⏳ A enviar...';
 
-function sendMessage(email) {
-  alert(`💬 Chat em desenvolvimento.\n\nEm breve poderás chatear diretamente!`);
+  const result = await apiPost('api/support.php', { action: 'send', receiver_id: receiverId });
+
+  if (result.success) {
+    btn.textContent = '✅ Enviado!';
+    btn.style.background = '#10b981';
+    btn.style.borderColor = '#10b981';
+  } else {
+    btn.disabled = false;
+    btn.textContent = '❤️ Apoio';
+  }
 }
 
 // ============================================
@@ -157,5 +202,5 @@ function sendMessage(email) {
 
 document.addEventListener('DOMContentLoaded', function () {
   renderAlerts();
-  setInterval(renderAlerts, 10000); // Refresh every 10s
+  setInterval(renderAlerts, 10000);
 });
