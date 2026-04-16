@@ -24,5 +24,8 @@ $stmt = $pdo->prepare('
 ');
 $stmt->execute([$groupId, $userId]);
 $alerts = $stmt->fetchAll();
+foreach ($alerts as &$a) {
+    $a['timestamp'] = toIso($a['timestamp']);
+}
 
 echo json_encode(['success' => true, 'alerts' => $alerts]);

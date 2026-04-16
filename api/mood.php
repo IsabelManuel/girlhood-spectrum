@@ -37,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ');
     $stmt->execute([$userId, $days]);
     $moods = $stmt->fetchAll();
+    foreach ($moods as &$m) {
+        $m['timestamp'] = toIso($m['timestamp']);
+    }
 
     echo json_encode(['success' => true, 'moods' => $moods]);
 }

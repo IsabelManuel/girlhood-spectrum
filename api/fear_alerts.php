@@ -72,6 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ');
     $stmt->execute([$userId, $groupId, $userId]);
     $allAlerts = $stmt->fetchAll();
+    foreach ($allAlerts as &$a) {
+        $a['timestamp'] = toIso($a['timestamp']);
+    }
+    unset($a);
 
     $unread = array_values(array_filter($allAlerts, fn($a) => (int)$a['is_unread'] === 1));
 

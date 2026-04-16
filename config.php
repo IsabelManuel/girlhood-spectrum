@@ -18,6 +18,8 @@ try {
     );
     $pdo->setAttribute(PDO::ATTR_ERRMODE,            PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    // Force UTC so timestamps are consistent regardless of server timezone
+    $pdo->exec("SET time_zone = '+00:00'");
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Erro de ligação à base de dados']);
@@ -48,6 +50,12 @@ function requireAuth(): void {
         echo json_encode(['success' => false, 'error' => 'Não autenticado']);
         exit;
     }
+}
+
+// Helper: convert MySQL datetime to ISO 8601 UTC (e.g. "2025-04-16T14:30:00Z")
+// This ensures JavaScript parses the timestamp in UTC, avoiding timezone offset errors
+function toIso(string $datetime): string {
+    return str_replace(' ', 'T', $datetime) . 'Z';
 }
 
 // Helper: get user's group id
